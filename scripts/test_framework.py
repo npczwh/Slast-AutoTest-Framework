@@ -7,4 +7,5 @@ class TestFramework(object):
         self.config = config
 
     def run(self):
+        print 'run with ' + self.config
         pass

@@ -4,6 +4,7 @@
 import ConfigParser
 import os
 from test_framework import TestFramework
+from list_reader import ListReader
 from func import *
 
 
@@ -22,16 +23,22 @@ class TestManager(object):
         if not os.path.isfile(filename):
             filename = base_path + '\\' + filename
             if not os.path.isfile(filename):
-                print 'config list file not found.'
+                print 'config list file is not found.'
                 return False
-        self.__list_file = filename
+        self.__list_file = file_abs_name(filename)
         self.__start_at = parser.get('base', 'start_at').strip()
         return True
 
     def __prepare_test_list(self):
         if not self.__parse_config():
             return False
-        if self.__start_at is None:
+        reader = ListReader()
+        if not reader.read(self.__list_file):
+            print reader.get_message()
+            return False
+        lines = reader.get_list()
+        print lines
+        if not self.__start_at:
             print 'start at none'
         else:
             print self.__start_at
