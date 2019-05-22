@@ -6,6 +6,9 @@ class TestFramework(object):
     def __init__(self, config):
         self.config = config
 
+    def get_name(self):
+        return 'test'
+
     def run(self):
         print 'run with ' + self.config
         pass
