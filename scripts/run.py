@@ -4,12 +4,8 @@
 import sys
 import os
 import re
-from test_framework import TestFramework
-
-
-def read_file(filename):
-    with open(filename) as f:
-        return f.read()
+from test_manager import TestManager
+from func import *
 
 
 def version():
@@ -35,5 +31,5 @@ if __name__ == '__main__':
         print 'Invalid param. Please read the usage below. \n'
         print_usage()
     else:
-        test = TestFramework(sys.argv[1])
-        test.run()
+        manager = TestManager(sys.argv[1])
+        manager.execute()
