@@ -15,19 +15,20 @@ def read_lines(filename):
 
 
 def file_base_dir(filename):
-    base_dir = None
-    if os.path.isfile(filename):
-        base_dir = os.path.abspath(os.path.dirname(filename))
-    return base_dir
+    return os.path.abspath(os.path.dirname(filename))
+
+
+def file_short_name(filename):
+    return os.path.split(filename)[-1]
 
 
 def file_abs_name(filename):
-    base_dir = file_base_dir(filename)
-    return base_dir + '\\' + os.path.split(filename)[-1]
+    return file_base_dir(filename) + '\\' + file_short_name(filename)
+
 
 if __name__ == '__main__':
     # test
-    name = '%s\\func.py' % os.getcwd()
+    name = '%s\\func' % os.getcwd()
     print name
-    print file_base_dir(name)
+    print file_short_name(name)
     exit()

@@ -1,12 +1,14 @@
 #!/usr/bin/env python
 # _*_ coding: utf-8 _*_
 
+from func import *
+
 
 class TestFramework(object):
-    def __init__(self, config, test_level):
-        self.__config = config
+    def __init__(self, path, test_level):
+        self.__name = file_short_name(path)
+        self.__config = path + '\\conf\\' + self.__name + '.conf'
         self.__test_level = test_level
-        self.__name = 'test'
         self.__msg = ''
 
     def get_name(self):
@@ -17,4 +19,4 @@ class TestFramework(object):
 
     def run(self):
         print 'run with ' + self.__config
-        pass
+        return False

@@ -33,6 +33,6 @@ if __name__ == '__main__':
     else:
         manager = TestManager(sys.argv[1])
         if not manager.execute():
-            print 'Run test error: ' + manager.get_message()
+            print 'Run tests error: ' + manager.get_message()
         else:
             print 'Test finish'

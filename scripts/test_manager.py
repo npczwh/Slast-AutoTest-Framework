@@ -24,7 +24,7 @@ class TestManager(object):
         if not os.path.isfile(filename):
             filename = base_path + '\\' + filename
             if not os.path.isfile(filename):
-                self.__msg = 'config list file is not found.'
+                self.__msg = 'suite list file is not found.'
                 return False
         self.__list_file = file_abs_name(filename)
         self.__start_at = parser.get('base', 'start_at').strip()
@@ -32,8 +32,8 @@ class TestManager(object):
         return True
 
     def __prepare_test_list(self, suite_list):
-        for suite_config in suite_list:
-            suite = TestFramework(suite_config, self.__test_level)
+        for suite_path in suite_list:
+            suite = TestFramework(suite_path, self.__test_level)
             self.__suites.append(suite)
         if self.__start_at:
             for suite in self.__suites:
@@ -51,7 +51,7 @@ class TestManager(object):
         if not self.__parse_config():
             return False
         reader = ListReader()
-        if not reader.read(self.__list_file):
+        if not reader.read(self.__list_file, False):
             self.__msg = reader.get_message()
             return False
         suite_list = reader.get_list()
@@ -60,9 +60,12 @@ class TestManager(object):
         return True
 
     def __start(self):
+        ret = True
         for suite in self.__suites:
             if not suite.run():
-                self.__msg += '\nRun suite %s error: %s' % (suite.get_name(), suite.get_message())
+                self.__msg += '\n\tRun suite %s error: %s' % (suite.get_name(), suite.get_message())
+                ret = False
+        return ret
 
     def execute(self):
         if not self.__prepare():
