@@ -19,7 +19,7 @@ class TestManager(object):
         parser = ConfigParser.SafeConfigParser()
         parser.read(self.__config)
         base_path = file_base_dir(self.__config)
-        filename = parser.get('base', 'config_list_file').strip()
+        filename = parser.get('base', 'module_config_list').strip()
         if not os.path.isfile(filename):
             filename = base_path + '\\' + filename
             if not os.path.isfile(filename):
@@ -58,7 +58,12 @@ class TestManager(object):
             return False
         return True
 
+    def __start(self):
+        for test in self.__tests:
+            test.run()
+
     def execute(self):
         if not self.__prepare():
             pass
+        self.__start()
 
