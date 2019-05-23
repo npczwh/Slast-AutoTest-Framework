@@ -14,38 +14,38 @@ class TestManager(object):
         self.__list_file = None
         self.__start_at = None
         self.__test_level = None
-        self.__tests = []
+        self.__suites = []
+        self.__msg = ''
 
     def __parse_config(self):
         parser = ConfigParser.SafeConfigParser()
         parser.read(self.__config)
         base_path = file_base_dir(self.__config)
-        filename = parser.get('base', 'module_config_list').strip()
+        filename = parser.get('base', 'suite_list').strip()
         if not os.path.isfile(filename):
             filename = base_path + '\\' + filename
             if not os.path.isfile(filename):
-                print 'config list file is not found.'
+                self.__msg = 'config list file is not found.'
                 return False
         self.__list_file = file_abs_name(filename)
         self.__start_at = parser.get('base', 'start_at').strip()
         self.__test_level = parser.get('base', 'test_level').strip()
         return True
 
-    def __prepare_test_list(self, module_configs):
-        for module_config in module_configs:
-            test = TestFramework(module_config, self.__test_level)
-            self.__tests.append(test)
+    def __prepare_test_list(self, suite_list):
+        for suite_config in suite_list:
+            suite = TestFramework(suite_config, self.__test_level)
+            self.__suites.append(suite)
         if self.__start_at:
-            print 'start at'
-            for test in self.__tests:
-                if self.__start_at == test.get_name():
+            for suite in self.__suites:
+                if self.__start_at == suite.get_name():
                     break
                 else:
-                    self.__tests.remove(test)
-        if len(self.__tests):
+                    self.__suites.remove(suite)
+        if len(self.__suites):
             return True
         else:
-            print 'the real test list is empty'
+            self.__msg = 'the real suite list is empty'
             return False
 
     def __prepare(self):
@@ -53,19 +53,21 @@ class TestManager(object):
             return False
         reader = ListReader()
         if not reader.read(self.__list_file):
-            print reader.get_message()
+            self.__msg = reader.get_message()
             return False
-        module_configs = reader.get_list()
-        if not self.__prepare_test_list(module_configs):
+        suite_list = reader.get_list()
+        if not self.__prepare_test_list(suite_list):
             return False
         return True
 
     def __start(self):
-        for test in self.__tests:
-            test.run()
+        for suite in self.__suites:
+            suite.run()
 
     def execute(self):
         if not self.__prepare():
-            pass
-        self.__start()
+            return False
+        return self.__start()
 
+    def get_message(self):
+        return self.__msg
