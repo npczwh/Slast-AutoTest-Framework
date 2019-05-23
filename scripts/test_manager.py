@@ -2,7 +2,6 @@
 # _*_ coding: utf-8 _*_
 
 import ConfigParser
-import os
 from test_framework import TestFramework
 from list_reader import ListReader
 from func import *
@@ -62,7 +61,8 @@ class TestManager(object):
 
     def __start(self):
         for suite in self.__suites:
-            suite.run()
+            if not suite.run():
+                self.__msg += '\nRun suite %s error: %s' % (suite.get_name(), suite.get_message())
 
     def execute(self):
         if not self.__prepare():
