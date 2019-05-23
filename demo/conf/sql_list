@@ -1,3 +1,6 @@
 # level: normal
 1.sql
 #2.sql
+level: fulltest
+3.sql
+4.sql

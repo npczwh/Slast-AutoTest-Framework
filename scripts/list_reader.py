@@ -13,8 +13,11 @@ class ListReader(object):
         self.__lines = None
         lines = read_lines(filename)
         base_path = file_base_dir(filename)
-        for i in range(len(lines)):
+        for i in range(len(lines) - 1, -1, -1):
             lines[i] = lines[i].strip()
+            if not lines[i]:
+                lines.remove(lines[i])
+                continue
             if lines[i][0] is '#':
                 lines.remove(lines[i])
                 continue

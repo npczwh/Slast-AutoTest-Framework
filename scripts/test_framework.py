@@ -3,12 +3,13 @@
 
 
 class TestFramework(object):
-    def __init__(self, config):
-        self.config = config
+    def __init__(self, config, test_level):
+        self.__config = config
+        self.__test_level = test_level
 
     def get_name(self):
         return 'test'
 
     def run(self):
-        print 'run with ' + self.config
+        print 'run with ' + self.__config
         pass

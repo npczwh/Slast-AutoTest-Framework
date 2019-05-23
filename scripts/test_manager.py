@@ -13,6 +13,7 @@ class TestManager(object):
         self.__config = config
         self.__list_file = None
         self.__start_at = None
+        self.__test_level = None
         self.__tests = []
 
     def __parse_config(self):
@@ -27,11 +28,12 @@ class TestManager(object):
                 return False
         self.__list_file = file_abs_name(filename)
         self.__start_at = parser.get('base', 'start_at').strip()
+        self.__test_level = parser.get('base', 'test_level').strip()
         return True
 
-    def __prepare_test_list(self, configs):
-        for config in configs:
-            test = TestFramework(config)
+    def __prepare_test_list(self, module_configs):
+        for module_config in module_configs:
+            test = TestFramework(module_config, self.__test_level)
             self.__tests.append(test)
         if self.__start_at:
             print 'start at'
@@ -53,8 +55,8 @@ class TestManager(object):
         if not reader.read(self.__list_file):
             print reader.get_message()
             return False
-        configs = reader.get_list()
-        if not self.__prepare_test_list(configs):
+        module_configs = reader.get_list()
+        if not self.__prepare_test_list(module_configs):
             return False
         return True
 
