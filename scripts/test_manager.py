@@ -20,13 +20,11 @@ class TestManager(object):
         parser = ConfigParser.SafeConfigParser()
         parser.read(self.__config)
         base_path = file_base_dir(self.__config)
-        filename = parser.get('base', 'suite_list').strip()
-        if not os.path.isfile(filename):
-            filename = base_path + '\\' + filename
-            if not os.path.isfile(filename):
-                self.__msg = 'suite list file is not found.'
-                return False
-        self.__list_file = file_abs_name(filename)
+        filename = parser.get('base', 'suite_list')
+        self.__list_file = real_file_name(base_path, filename)
+        if not self.__list_file:
+            self.__msg = 'suite list file () not found' % filename
+            return False
         self.__start_at = parser.get('base', 'start_at').strip()
         self.__test_level = parser.get('base', 'test_level').strip()
         return True
