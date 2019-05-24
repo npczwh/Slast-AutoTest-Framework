@@ -1,21 +1,18 @@
 #!/usr/bin/env python
 # _*_ coding: utf-8 _*_
 
-from env_step_base import EnvStepBase
+from env_base import EnvExecutorBase
 
 
-class EnvColdSwap(EnvStepBase):
+class EnvColdSwap(EnvExecutorBase):
     def __init__(self, config, log):
         super(EnvColdSwap, self).__init__(config, log)
 
     def to_next(self):
-        return False
+        pass
 
-    def to_prev(self):
-        return False
+    def real_execute(self):
+        pass
 
-    def excute(self):
-        return False
-
-    def clear(self):
-        return False
+    def real_clear(self):
+        pass
