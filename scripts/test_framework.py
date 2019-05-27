@@ -10,15 +10,15 @@ from env_hot_swap import EnvHotSwap
 
 class TestFramework(object):
     def __init__(self, path, test_level):
-        self.__name = file_short_name(path)
-        self.__config = path + '\\conf\\' + self.__name + '.conf'
+        self.__path = path
+        self.__config = path + '\\conf\\' + file_short_name(self.__path) + '.conf'
         self.__env_step = None
         self.__log = None
         self.__test_level = test_level
         self.__msg = ''
 
     def get_name(self):
-        return self.__name
+        return file_short_name(self.__path)
 
     def get_message(self):
         return self.__msg
@@ -32,8 +32,8 @@ class TestFramework(object):
         return True
 
     def __add_one_env(self, type):
-        base_path = file_base_dir(self.__config)
-        config = real_file_name(base_path, self.__parser.get(type, 'config'))
+        conf_path = file_base_dir(self.__config)
+        config = real_file_name(conf_path, self.__parser.get(type, 'config'))
         skip = self.__parser.get(type, 'skip')
         if skip:
             if int(skip):
@@ -64,6 +64,13 @@ class TestFramework(object):
         return True
 
     def __execute(self):
+        conf_path = file_base_dir(self.__config)
+        sql_list_name = real_file_name(conf_path, self.__parser.get('case', 'sql_list'))
+        customize_list_name = real_file_name(conf_path, self.__parser.get('case', 'customize_list'))
+        whitelist_name = real_file_name(conf_path, self.__parser.get('case', 'sql_list'))
+        blacklist_name = real_file_name(conf_path, self.__parser.get('case', 'customize_list'))
+        begin_at = real_file_name(conf_path, self.__parser.get('case', 'begin_at'))
+        test_level = real_file_name(conf_path, self.__parser.get('case', 'test_level'))
         return True
 
     def run(self):
