@@ -22,7 +22,7 @@ class EnvExecutorBase:
     def real_execute(self):
         pass
 
-    def excute(self):
+    def execute(self):
         if self.__is_executed:
             return True
         if self.real_execute():

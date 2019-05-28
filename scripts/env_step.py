@@ -30,7 +30,7 @@ class EnvStep(object):
         else:
             return False
 
-    def excute(self):
+    def execute(self):
         if not self.__executor.execute():
             self.__msg += self.__executor.get_message()
             return False

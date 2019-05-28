@@ -70,13 +70,13 @@ class TestFramework(object):
     def __add_one_normal_list(self, factory, list):
         level = self.__level_num('normal')
         for item in list:
-            if item[0] is '[' and item[-1] is ']':
+            if item[0] == '[' and item[-1] == ']':
                 item = item[1:-1:]
                 level = self.__level_num(item)
                 continue
             if level < self.__level:
                 continue
-            executor = factory.create_executor(file_base_name(item), 'normal', None)
+            executor = factory.create_executor(file_short_name(item), item, 'normal')
             if executor:
                 self.__executor_list.append(executor)
 
@@ -85,12 +85,12 @@ class TestFramework(object):
             level = self.__level_num(item['level'])
             if level < self.__level:
                 continue
-            executor = factory.create_executor(item['name'], 'xml', item)
+            executor = factory.create_executor(item['name'], item, 'xml')
             if executor:
                 self.__executor_list.append(executor)
 
     def __add_one_list(self, factory, list, list_type):
-        if list_type is 'xml':
+        if list_type == 'xml':
             self.__add_one_xml_list(factory, list)
         else:
             self.__add_one_normal_list(factory, list)
@@ -98,7 +98,7 @@ class TestFramework(object):
     def __get_one_list(self, name):
         one_list = []
         list_type = file_suffix(name)
-        if list_type is 'xml':
+        if list_type == 'xml':
             tree = ET.parse(name)
             root = tree.getroot()
             for test in root:
@@ -109,7 +109,7 @@ class TestFramework(object):
                     one_list.append(test.attrib)
         else:
             reader = ListReader()
-            if reader.readfile(list):
+            if reader.readfile(name):
                 one_list = reader.get_list()
             else:
                 self.__msg += reader.get_message()
@@ -135,13 +135,24 @@ class TestFramework(object):
                 return False
             self.__add_one_list(factory, one_list, list_type)
 
-        if len(self.__executor_list) is 0:
+        if not len(self.__executor_list):
             self.__msg += 'the real test list is empty'
             return False
         return True
 
     def __execute(self):
-        return True
+        ret = True
+        for executor in self.__executor_list:
+            if executor.prepare() and executor.excute() and executor.compare():
+                pass
+            else:
+                self.__msg += executor.get_message()
+                print '%s failed' % executor.get_name()
+            if not executor.clear():
+                self.__msg += executor.get_message()
+                ret = False
+                break
+        return ret
 
     def __init_level(self):
         level = self.__parser.get('suite', 'test_level').strip()
@@ -149,11 +160,11 @@ class TestFramework(object):
             self.__level = self.__level_num(level)
 
     def __level_num(self, name):
-        if name.lower() is 'full':
+        if name.lower() == 'full':
             return 1
-        elif name.lower() is 'normal':
+        elif name.lower() == 'normal':
             return 2
-        elif name.lower() is 'smoke':
+        elif name.lower() == 'smoke':
             return 3
         else:
             return 2
@@ -171,8 +182,8 @@ class TestFramework(object):
         if self.__env_step is None:
             return self.__execute()
         while self.__env_step.to_next():
-            if self.__env_step.execute():
-                self.__execute()
+            if self.__env_step.execute() and self.__execute():
+                pass
             else:
                 self.__msg += self.__env_step.get_and_clear_message()
             if not self.__env_step.clear():

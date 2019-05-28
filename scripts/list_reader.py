@@ -33,11 +33,11 @@ class ListReader(object):
             if not lines[i]:
                 lines.remove(lines[i])
                 continue
-            if lines[i][0] is '#':
+            if lines[i][0] == '#':
                 lines.remove(lines[i])
                 continue
             # check is tag
-            if lines[i][0] is '[' and lines[i][-1] is ']':
+            if lines[i][0] == '[' and lines[i][-1] == ']':
                 continue
             if checkfile:
                 if not self.__target_exist(lines[i], isfile):

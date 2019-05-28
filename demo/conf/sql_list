@@ -1,6 +1,6 @@
 # [smoke]
 s1.sql
 #s2.sql
-[full]
-s3.sql
+[smoke]
+#s3.sql
 s4.sql

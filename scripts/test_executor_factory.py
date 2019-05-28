@@ -3,6 +3,7 @@
 
 from test_executor import TestExecutor
 from list_reader import ListReader
+from func import *
 
 
 class TestExecutorFactory(object):
@@ -41,9 +42,16 @@ class TestExecutorFactory(object):
             return False
         return True
 
-    def create_executor(self, name, type, context):
+    def create_executor(self, name, context, type):
+        executor = None
         if not self.__filter(name):
             return None
+        if type == 'xml':
+            executor = TestExecutor(name, context['execute'], self.__log)
+            executor.set_extra_attr(context['prepare'], context['clear'], context['compare'])
+        else:
+            executor = TestExecutor(name, context, self.__log)
+        return executor
 
     def get_message(self):
         return self.__msg
