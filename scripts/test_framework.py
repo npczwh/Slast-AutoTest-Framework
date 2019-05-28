@@ -2,6 +2,7 @@
 # _*_ coding: utf-8 _*_
 
 import ConfigParser
+import xml.etree.ElementTree as ET
 from func import *
 from env_step import EnvStep
 from env_cold_swap import EnvColdSwap
@@ -66,7 +67,7 @@ class TestFramework(object):
             return False
         return True
 
-    def __add_one_list(self, factory, list, list_type):
+    def __add_one_normal_list(self, factory, list):
         level = self.__level_num('normal')
         for item in list:
             if item[0] is '[' and item[-1] is ']':
@@ -75,15 +76,37 @@ class TestFramework(object):
                 continue
             if level < self.__level:
                 continue
-            executor = factory.create_executor(file_base_name(item), None, None)
+            executor = factory.create_executor(file_base_name(item), 'normal', None)
             if executor:
                 self.__executor_list.append(executor)
 
+    def __add_one_xml_list(self, factory, list):
+        for item in list:
+            level = self.__level_num(item['level'])
+            if level < self.__level:
+                continue
+            executor = factory.create_executor(item['name'], 'xml', item)
+            if executor:
+                self.__executor_list.append(executor)
+
+    def __add_one_list(self, factory, list, list_type):
+        if list_type is 'xml':
+            self.__add_one_xml_list(factory, list)
+        else:
+            self.__add_one_normal_list(factory, list)
+
     def __get_one_list(self, name):
-        one_list = None
+        one_list = []
         list_type = file_suffix(name)
         if list_type is 'xml':
-            pass
+            tree = ET.parse(name)
+            root = tree.getroot()
+            for test in root:
+                if not test.get('name') or not test.get('execute'):
+                    self.__msg += 'name or execute not found in %s' % name
+                    break
+                else:
+                    one_list.append(test.attrib)
         else:
             reader = ListReader()
             if reader.readfile(list):
@@ -108,7 +131,7 @@ class TestFramework(object):
             name = real_file_name(conf_path, f)
             list_type = file_suffix(name)
             one_list = self.__get_one_list(name)
-            if not one_list:
+            if not len(one_list):
                 return False
             self.__add_one_list(factory, one_list, list_type)
 
@@ -121,16 +144,12 @@ class TestFramework(object):
         return True
 
     def __init_level(self):
-        level = self.__level_num(self.__parser.get('suite', 'test_level').strip())
+        level = self.__parser.get('suite', 'test_level').strip()
         if level:
-            self.__level = level
-        if not self.__level:
-            self.__level = self.__level_num('normal')
+            self.__level = self.__level_num(level)
 
     def __level_num(self, name):
-        if not name:
-            return 0
-        elif name.lower() is 'full':
+        if name.lower() is 'full':
             return 1
         elif name.lower() is 'normal':
             return 2
