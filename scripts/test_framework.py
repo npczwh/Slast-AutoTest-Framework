@@ -66,35 +66,55 @@ class TestFramework(object):
             return False
         return True
 
-    def __create_executors(self):
-        conf_path = file_base_dir(self.__config)
-        sql_list_name = real_file_name(conf_path, self.__parser.get('suite', 'sql_list'))
-        customize_list_name = real_file_name(conf_path, self.__parser.get('suite', 'customize_list'))
-        whitelist_name = real_file_name(conf_path, self.__parser.get('suite', 'whitelist'))
-        blacklist_name = real_file_name(conf_path, self.__parser.get('suite', 'blacklist'))
-        begin_at = self.__parser.get('suite', 'begin_at').strip()
-
-        reader = ListReader()
-        if not reader.readfile(sql_list_name):
-            self.__msg += reader.get_message()
-            return False
-        sql_list = reader.get_list()
-
-        factory = TestExecutorFactory()
-        if not factory.init(whitelist_name, blacklist_name, begin_at):
-            self.__msg += factory.get_message()
-            return False
-
-
-        for item in sql_list:
-            # check level
+    def __add_one_list(self, factory, list, list_type):
+        level = self.__level_num('normal')
+        for item in list:
+            if item[0] is '[' and item[-1] is ']':
+                item = item[1:-1:]
+                level = self.__level_num(item)
+                continue
+            if level < self.__level:
+                continue
             executor = factory.create_executor(file_base_name(item), None, None)
             if executor:
                 self.__executor_list.append(executor)
 
-        # if len(sql_list) is 0 or len(customize_list) is 0:
-        #     self.__msg =
-        #     return False
+    def __get_one_list(self, name):
+        one_list = None
+        list_type = file_suffix(name)
+        if list_type is 'xml':
+            pass
+        else:
+            reader = ListReader()
+            if reader.readfile(list):
+                one_list = reader.get_list()
+            else:
+                self.__msg += reader.get_message()
+        return one_list
+
+    def __create_executors(self):
+        conf_path = file_base_dir(self.__config)
+        whitelist_name = real_file_name(conf_path, self.__parser.get('suite', 'whitelist'))
+        blacklist_name = real_file_name(conf_path, self.__parser.get('suite', 'blacklist'))
+        begin_at = self.__parser.get('suite', 'begin_at').strip()
+
+        factory = TestExecutorFactory()
+        if not factory.init(whitelist_name, blacklist_name, begin_at, self.__log):
+            self.__msg += factory.get_message()
+            return False
+
+        list_files = line_to_list(self.__parser.get('suite', 'list'))
+        for f in list_files:
+            name = real_file_name(conf_path, f)
+            list_type = file_suffix(name)
+            one_list = self.__get_one_list(name)
+            if not one_list:
+                return False
+            self.__add_one_list(factory, one_list, list_type)
+
+        if len(self.__executor_list) is 0:
+            self.__msg += 'the real test list is empty'
+            return False
         return True
 
     def __execute(self):

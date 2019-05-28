@@ -36,6 +36,9 @@ class ListReader(object):
             if lines[i][0] is '#':
                 lines.remove(lines[i])
                 continue
+            # check is tag
+            if lines[i][0] is '[' and lines[i][-1] is ']':
+                continue
             if checkfile:
                 if not self.__target_exist(lines[i], isfile):
                     lines[i] = base_path + '\\' + lines[i]

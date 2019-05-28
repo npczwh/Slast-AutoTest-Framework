@@ -30,6 +30,14 @@ def file_abs_name(filename):
     return file_base_dir(filename) + '\\' + file_short_name(filename)
 
 
+def file_suffix(filename):
+    l = file_short_name(filename).split(".")
+    if len(l) > 1:
+        return l[-1]
+    else:
+        return ''
+
+
 def real_file_name(base_path, filename):
     real_filename = filename.strip()
     if not os.path.isfile(real_filename):
@@ -40,9 +48,17 @@ def real_file_name(base_path, filename):
         real_filename = file_abs_name(real_filename)
     return real_filename
 
+
+def line_to_list(line):
+    list = line.split(',')
+    for i in range(len(list)):
+        list[i] = list[i].strip()
+    return list
+
+
 if __name__ == '__main__':
     # test
     name = '%s\\func.py' % os.getcwd()
     print name
-    print file_base_name(name)
+    print file_suffix(name)
     exit()

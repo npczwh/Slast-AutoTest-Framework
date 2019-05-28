@@ -10,9 +10,10 @@ class TestExecutorFactory(object):
         self.__whitelist = None
         self.__blacklist = None
         self.__begin_at = None
+        self.__log = None
         self.__msg = ''
 
-    def init(self, whitelist_name, blacklist_name, begin_at):
+    def init(self, whitelist_name, blacklist_name, begin_at, log):
         reader = ListReader()
         if whitelist_name:
             if not reader.readitem(whitelist_name):
@@ -25,6 +26,7 @@ class TestExecutorFactory(object):
                 return False
             self.__blacklist = reader.get_list()
         self.__begin_at = begin_at
+        self.__log = log
         return True
 
     def __filter(self, name):

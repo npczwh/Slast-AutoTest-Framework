@@ -1,6 +1,6 @@
-# level: normal
+# [smoke]
 s1.sql
 #s2.sql
-level: fulltest
+[full]
 s3.sql
 s4.sql
