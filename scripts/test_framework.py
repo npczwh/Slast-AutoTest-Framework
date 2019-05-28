@@ -6,15 +6,18 @@ from func import *
 from env_step import EnvStep
 from env_cold_swap import EnvColdSwap
 from env_hot_swap import EnvHotSwap
+from list_reader import ListReader
+from test_executor_factory import TestExecutorFactory
 
 
 class TestFramework(object):
-    def __init__(self, path, test_level):
+    def __init__(self, path, level_name):
         self.__path = path
         self.__config = path + '\\conf\\' + file_short_name(self.__path) + '.conf'
         self.__env_step = None
+        self.__executor_list = []
+        self.__level = self.__level_num(level_name)
         self.__log = None
-        self.__test_level = test_level
         self.__msg = ''
 
     def get_name(self):
@@ -63,22 +66,68 @@ class TestFramework(object):
             return False
         return True
 
-    def __execute(self):
+    def __create_executors(self):
         conf_path = file_base_dir(self.__config)
-        sql_list_name = real_file_name(conf_path, self.__parser.get('case', 'sql_list'))
-        customize_list_name = real_file_name(conf_path, self.__parser.get('case', 'customize_list'))
-        whitelist_name = real_file_name(conf_path, self.__parser.get('case', 'sql_list'))
-        blacklist_name = real_file_name(conf_path, self.__parser.get('case', 'customize_list'))
-        begin_at = real_file_name(conf_path, self.__parser.get('case', 'begin_at'))
-        test_level = real_file_name(conf_path, self.__parser.get('case', 'test_level'))
+        sql_list_name = real_file_name(conf_path, self.__parser.get('suite', 'sql_list'))
+        customize_list_name = real_file_name(conf_path, self.__parser.get('suite', 'customize_list'))
+        whitelist_name = real_file_name(conf_path, self.__parser.get('suite', 'whitelist'))
+        blacklist_name = real_file_name(conf_path, self.__parser.get('suite', 'blacklist'))
+        begin_at = self.__parser.get('suite', 'begin_at').strip()
+
+        reader = ListReader()
+        if not reader.readfile(sql_list_name):
+            self.__msg += reader.get_message()
+            return False
+        sql_list = reader.get_list()
+
+        factory = TestExecutorFactory()
+        if not factory.init(whitelist_name, blacklist_name, begin_at):
+            self.__msg += factory.get_message()
+            return False
+
+
+        for item in sql_list:
+            # check level
+            executor = factory.create_executor(file_base_name(item), None, None)
+            if executor:
+                self.__executor_list.append(executor)
+
+        # if len(sql_list) is 0 or len(customize_list) is 0:
+        #     self.__msg =
+        #     return False
         return True
+
+    def __execute(self):
+        return True
+
+    def __init_level(self):
+        level = self.__level_num(self.__parser.get('suite', 'test_level').strip())
+        if level:
+            self.__level = level
+        if not self.__level:
+            self.__level = self.__level_num('normal')
+
+    def __level_num(self, name):
+        if not name:
+            return 0
+        elif name.lower() is 'full':
+            return 1
+        elif name.lower() is 'normal':
+            return 2
+        elif name.lower() is 'smoke':
+            return 3
+        else:
+            return 2
 
     def run(self):
         print 'run with ' + self.__config
         ret = True
         if not self.__parse_conf():
             return False
+        self.__init_level()
         if not self.__create_env_steps():
+            return False
+        if not self.__create_executors():
             return False
         if self.__env_step is None:
             return self.__execute()

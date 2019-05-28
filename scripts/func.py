@@ -22,6 +22,10 @@ def file_short_name(filename):
     return os.path.split(filename)[-1]
 
 
+def file_base_name(filename):
+    return file_short_name(filename).split(".")[0]
+
+
 def file_abs_name(filename):
     return file_base_dir(filename) + '\\' + file_short_name(filename)
 
@@ -38,7 +42,7 @@ def real_file_name(base_path, filename):
 
 if __name__ == '__main__':
     # test
-    name = '%s\\func' % os.getcwd()
+    name = '%s\\func.py' % os.getcwd()
     print name
-    print file_short_name(name)
+    print file_base_name(name)
     exit()

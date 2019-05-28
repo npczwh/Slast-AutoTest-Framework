@@ -1,5 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
 <list>
-    <case name="" type="" level="" prepare="" execute="" clear="" compare="" report=""/>
-    <!--<case name="" type="" level="" prepare="" execute="" clear="" compare="" report=""/>-->
+    <case name="c1" type="" level="" prepare="" execute="" clear="" compare="" report=""/>
+    <case name="c2" type="" level="" prepare="" execute="" clear="" compare="" report=""/>
+    <case name="c3" type="" level="" prepare="" execute="" clear="" compare="" report=""/>
+    <case name="c4" type="" level="" prepare="" execute="" clear="" compare="" report=""/>
+    <!--<case name="c5" type="" level="" prepare="" execute="" clear="" compare="" report=""/>-->
 </list>

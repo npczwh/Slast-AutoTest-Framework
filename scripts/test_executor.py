@@ -3,9 +3,11 @@
 
 
 class TestExecutor(object):
-    def __init__(self, name):
+    def __init__(self, name, log):
         self.__msg = ''
         self.__name = name
+        # todo: handle parallel write
+        self.__log = log
 
     def get_name(self):
         return self.__name

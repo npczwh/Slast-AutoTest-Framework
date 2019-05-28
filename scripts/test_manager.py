@@ -34,11 +34,12 @@ class TestManager(object):
             suite = TestFramework(suite_path, self.__test_level)
             self.__suites.append(suite)
         if self.__start_at:
-            for suite in self.__suites:
-                if self.__start_at == suite.get_name():
+            index = 0
+            for i in range(len(self.__suites)):
+                if self.__start_at == self.__suites[i].get_name():
                     break
-                else:
-                    self.__suites.remove(suite)
+                index = i + 1
+            self.__suites = self.__suites[index::]
         if len(self.__suites):
             return True
         else:
@@ -49,7 +50,7 @@ class TestManager(object):
         if not self.__parse_config():
             return False
         reader = ListReader()
-        if not reader.read(self.__list_file, False):
+        if not reader.readpath(self.__list_file):
             self.__msg = reader.get_message()
             return False
         suite_list = reader.get_list()

@@ -15,8 +15,17 @@ class ListReader(object):
         else:
             return os.path.exists(target)
 
-    def read(self, filename, isfile):
-        self.__lines = None
+    def readitem(self, filename):
+        return self.__read(filename, False, False)
+
+    def readfile(self, filename):
+        return self.__read(filename, True, True)
+
+    def readpath(self, filename):
+        return self.__read(filename, False, True)
+
+    def __read(self, filename, isfile, checkfile):
+        self.__init__()
         lines = read_lines(filename)
         base_path = file_base_dir(filename)
         for i in range(len(lines) - 1, -1, -1):
@@ -27,12 +36,13 @@ class ListReader(object):
             if lines[i][0] is '#':
                 lines.remove(lines[i])
                 continue
-            if not self.__target_exist(lines[i], isfile):
-                lines[i] = base_path + '\\' + lines[i]
+            if checkfile:
                 if not self.__target_exist(lines[i], isfile):
-                    self.__msg = 'config file %s in %s is not found.' % (lines[i], filename)
-                    return False
-            lines[i] = file_abs_name(lines[i])
+                    lines[i] = base_path + '\\' + lines[i]
+                    if not self.__target_exist(lines[i], isfile):
+                        self.__msg = 'config file %s in %s is not found.' % (lines[i], filename)
+                        return False
+                lines[i] = file_abs_name(lines[i])
         self.__lines = lines
         return True
 
