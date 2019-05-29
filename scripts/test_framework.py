@@ -12,6 +12,10 @@ from test_executor_factory import TestExecutorFactory
 
 
 class TestFramework(object):
+    FULL = 1
+    NORMAL = 2
+    SMOKE = 3
+
     def __init__(self, path, level_name):
         self.__path = path
         self.__config = path + '\\conf\\' + file_short_name(self.__path) + '.conf'
@@ -98,8 +102,8 @@ class TestFramework(object):
             tree = ET.parse(name)
             root = tree.getroot()
             for test in root:
-                if not test.get('name') or not test.get('execute'):
-                    self.__msg += 'name or execute not found in %s' % name
+                if not test.get('name'):
+                    self.__msg += 'name not found in %s' % name
                     break
                 else:
                     one_list.append(test.attrib)
@@ -158,13 +162,13 @@ class TestFramework(object):
 
     def __level_num(self, name):
         if name.lower() == 'full':
-            return 1
+            return self.FULL
         elif name.lower() == 'normal':
-            return 2
+            return self.NORMAL
         elif name.lower() == 'smoke':
-            return 3
+            return self.SMOKE
         else:
-            return 2
+            return self.NORMAL
 
     def run(self):
         print 'run with ' + self.__config

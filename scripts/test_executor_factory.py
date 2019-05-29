@@ -53,6 +53,8 @@ class TestExecutorFactory(object):
             executor.set_extra_attr(context['prepare'], context['clear'], context['compare'])
         else:
             executor = TestExecutor(name, context, self.__path, self.__log)
+            if executor.get_type(name) != executor.SQL:
+                executor = None
         return executor
 
     def get_message(self):
