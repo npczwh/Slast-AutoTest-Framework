@@ -3,7 +3,7 @@
 
 
 class TestExecutor(object):
-    def __init__(self, name, execute, log):
+    def __init__(self, name, execute, path, log):
         self.__msg = ''
         self.__name = name
         self.__prepare = None
@@ -11,6 +11,7 @@ class TestExecutor(object):
         self.__clear = None
         self.__compare = None
         # todo: handle parallel write
+        self.__path = path
         self.__log = log
 
     def set_extra_attr(self, prepare, clear, compare):

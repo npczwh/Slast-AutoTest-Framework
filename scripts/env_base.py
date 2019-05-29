@@ -10,42 +10,29 @@ class EnvExecutorBase:
     def __init__(self, config, log):
         self.config = config
         self.log = log
-        self.__is_executed = False
         self.index = 0
+        self.size = 1
         self.msg = ''
 
-    @abstractmethod
     def to_next(self):
-        pass
+        if self.index < self.size:
+            self.index += 1
+            return True
+        else:
+            return False
+
+    def is_last(self):
+        return self.index == self.size
 
     @abstractmethod
-    def real_execute(self):
-        pass
-
     def execute(self):
-        if self.__is_executed:
-            return True
-        if self.real_execute():
-            self.__is_executed = True
-            return True
-        else:
-            return False
+        return False
 
     @abstractmethod
-    def real_clear(self):
-        pass
-
     def clear(self):
-        if not self.__is_executed:
-            return True
-        if self.real_clear():
-            self.__is_executed = False
-            return True
-        else:
-            return False
+        return False
 
     def reset(self):
-        self.__is_executed = False
         self.index = 0
 
     def get_message(self):

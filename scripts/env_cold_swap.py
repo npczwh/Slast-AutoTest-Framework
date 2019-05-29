@@ -7,19 +7,12 @@ from env_base import EnvExecutorBase
 class EnvColdSwap(EnvExecutorBase):
     def __init__(self, config, log):
         super(EnvColdSwap, self).__init__(config, log)
-        self.index = 0
-        print 'cold swap'
+        self.size = 1
 
-    def to_next(self):
-        if self.index == 0:
-            self.index = 1
-            return True
-        return False
-
-    def real_execute(self):
+    def execute(self):
         print 'exec cold swap'
         return True
 
-    def real_clear(self):
+    def clear(self):
         print 'clear cold swap'
         return True

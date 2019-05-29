@@ -53,11 +53,7 @@ class TestFramework(object):
         else:
             self.__msg += 'unsupported type (%s). ' % type
             return False
-        if self.__env_step is None:
-            self.__env_step = EnvStep(env)
-        else:
-            des = EnvStep(env)
-            self.__env_step.add_descendant(des)
+        self.__env_step = EnvStep(env, self.__env_step)
         return True
 
     def __create_env_steps(self):
@@ -76,7 +72,7 @@ class TestFramework(object):
                 continue
             if level < self.__level:
                 continue
-            executor = factory.create_executor(file_short_name(item), item, 'normal')
+            executor = factory.create_executor(file_short_name(item), file_short_name(item), 'normal')
             if executor:
                 self.__executor_list.append(executor)
 
@@ -109,6 +105,7 @@ class TestFramework(object):
                     one_list.append(test.attrib)
         else:
             reader = ListReader()
+            reader.set_base_path(self.__path + '\\case')
             if reader.readfile(name):
                 one_list = reader.get_list()
             else:
@@ -122,7 +119,7 @@ class TestFramework(object):
         begin_at = self.__parser.get('suite', 'begin_at').strip()
 
         factory = TestExecutorFactory()
-        if not factory.init(whitelist_name, blacklist_name, begin_at, self.__log):
+        if not factory.init(whitelist_name, blacklist_name, begin_at, self.__path, self.__log):
             self.__msg += factory.get_message()
             return False
 
@@ -181,6 +178,8 @@ class TestFramework(object):
             return False
         if self.__env_step is None:
             return self.__execute()
+
+        self.__env_step = self.__env_step.get_root()
         while self.__env_step.to_next():
             if self.__env_step.execute() and self.__execute():
                 pass
