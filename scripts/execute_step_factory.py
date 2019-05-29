@@ -1,12 +1,11 @@
 #!/usr/bin/env python
 # _*_ coding: utf-8 _*_
 
-from test_executor import TestExecutor
+from execute_step import ExecuteStep
 from list_reader import ListReader
-from func import *
 
 
-class TestExecutorFactory(object):
+class ExecuteStepFactory(object):
     def __init__(self):
         self.__whitelist = None
         self.__blacklist = None
@@ -45,17 +44,17 @@ class TestExecutorFactory(object):
         return True
 
     def create_executor(self, name, context, type):
-        executor = None
+        step = None
         if not self.__filter(name):
             return None
         if type == 'xml':
-            executor = TestExecutor(name, context['execute'], self.__path, self.__log)
-            executor.set_extra_attr(context['prepare'], context['clear'], context['compare'])
+            step = ExecuteStep(name, context['execute'], self.__path, self.__log)
+            step.set_extra_attr(context['prepare'], context['clear'], context['compare'])
         else:
-            executor = TestExecutor(name, context, self.__path, self.__log)
-            if executor.get_type(name) != executor.SQL:
-                executor = None
-        return executor
+            step = ExecuteStep(name, context, self.__path, self.__log)
+            if step.get_type(name) != step.SQL:
+                step = None
+        return step
 
     def get_message(self):
         return self.__msg

@@ -4,7 +4,7 @@
 from func import *
 
 
-class TestExecutor(object):
+class ExecuteStep(object):
     SQL = 1
     SHELL = 2
     PYTHON = 3

@@ -8,7 +8,7 @@ from env_step import EnvStep
 from env_cold_swap import EnvColdSwap
 from env_hot_swap import EnvHotSwap
 from list_reader import ListReader
-from test_executor_factory import TestExecutorFactory
+from execute_step_factory import ExecuteStepFactory
 
 
 class TestFramework(object):
@@ -122,7 +122,7 @@ class TestFramework(object):
         blacklist_name = real_file_name(conf_path, self.__parser.get('suite', 'blacklist'))
         begin_at = self.__parser.get('suite', 'begin_at').strip()
 
-        factory = TestExecutorFactory()
+        factory = ExecuteStepFactory()
         if not factory.init(whitelist_name, blacklist_name, begin_at, self.__path, self.__log):
             self.__msg += factory.get_message()
             return False
