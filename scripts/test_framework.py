@@ -16,12 +16,16 @@ class TestFramework(object):
     NORMAL = 2
     SMOKE = 3
 
+    STRICT = 1
+    TOLERATE = 2
+
     def __init__(self, path, level_name):
         self.__path = path
         self.__config = path + '\\conf\\' + file_short_name(self.__path) + '.conf'
         self.__env_step = None
         self.__executor_list = []
         self.__level = self.__level_num(level_name)
+        self.__mode = None
         self.__log = None
         self.__msg = ''
 
@@ -37,12 +41,16 @@ class TestFramework(object):
             return False
         self.__parser = ConfigParser.SafeConfigParser()
         self.__parser.read(self.__config)
+        level = self.__parser.get('suite', 'test_level').strip()
+        if level:
+            self.__level = self.__level_num(level)
+        self.__mode = int(self.__parser.get('suite', 'test_mode').strip())
         return True
 
     def __add_one_env(self, type):
         conf_path = file_base_dir(self.__config)
         config = real_file_name(conf_path, self.__parser.get(type, 'config'))
-        skip = self.__parser.get(type, 'skip')
+        skip = self.__parser.get(type, 'skip').strip()
         if skip:
             if int(skip):
                 return True
@@ -141,24 +149,34 @@ class TestFramework(object):
             return False
         return True
 
-    def __execute(self):
+    def __get_execute_ret(self, executor, type):
         ret = True
-        for executor in self.__executor_list:
-            if executor.prepare() and executor.excute() and executor.compare():
-                pass
-            else:
-                self.__msg += executor.get_message()
-                print '%s failed' % executor.get_name()
-            if not executor.clear():
-                self.__msg += executor.get_message()
-                ret = False
-                break
-        return ret
+        if type == 'prepare':
+            ret = executor.prepare()
+        if type == 'excute':
+            ret = executor.excute()
+        if type == 'compare':
+            ret = executor.compare()
+            print '%s failed' % executor.get_name()
+        if type == 'clear':
+            ret = executor.clear()
+        self.__msg += executor.get_message()
+        if not ret and self.__mode == self.STRICT and type != 'compare':
+            return False
+        else:
+            return True
 
-    def __init_level(self):
-        level = self.__parser.get('suite', 'test_level').strip()
-        if level:
-            self.__level = self.__level_num(level)
+    def __execute(self):
+        for executor in self.__executor_list:
+            if not self.__get_execute_ret(executor, 'prepare'):
+                return False
+            if not self.__get_execute_ret(executor, 'excute'):
+                return False
+            if not self.__get_execute_ret(executor, 'compare'):
+                return False
+            if not self.__get_execute_ret(executor, 'clear'):
+                return False
+        return True
 
     def __level_num(self, name):
         if name.lower() == 'full':
@@ -175,7 +193,6 @@ class TestFramework(object):
         ret = True
         if not self.__parse_conf():
             return False
-        self.__init_level()
         if not self.__create_env_steps():
             return False
         if not self.__create_executors():
