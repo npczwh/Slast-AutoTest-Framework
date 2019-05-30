@@ -9,7 +9,8 @@ class ExecuteStep(object):
     SHELL = 2
     PYTHON = 3
     PERL = 4
-    UNSURPPORT = 5
+    HANDLER = 5
+    UNSURPPORT = 6
 
     def __init__(self, name, execute, path, log):
         self.__msg = ''
@@ -40,6 +41,8 @@ class ExecuteStep(object):
             return self.PYTHON
         elif suffix == 'pl':
             return self.PERL
+        elif suffix == '':
+            return self.HANDLER
         else:
             return self.UNSURPPORT
 

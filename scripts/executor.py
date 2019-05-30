@@ -4,6 +4,7 @@
 
 class Executor(object):
     def __init__(self):
+        self.__handler = None
         pass
 
     def execute(self):
