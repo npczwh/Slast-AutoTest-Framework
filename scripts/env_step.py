@@ -50,23 +50,23 @@ class EnvStep(object):
     def execute(self):
         if not self.has_child() or self.__should_execute:
             if not self.__executor.execute():
-                self.__msg += self.__executor.get_message()
+                self.__msg += self.__executor.get_message() + '\n'
                 return False
             self.__should_execute = False
         if self.has_child():
             if not self.__single_child.execute():
-                self.__msg += self.__executor.get_message()
+                self.__msg += self.__executor.get_message() + '\n'
                 return False
         return True
 
     def clear(self):
         if self.has_child():
             if not self.__single_child.clear():
-                self.__msg += self.__single_child.get_message()
+                self.__msg += self.__single_child.get_message() + '\n'
                 return False
         if not self.has_child() or self.__should_clear:
             if not self.__executor.clear():
-                self.__msg += self.__executor.get_message()
+                self.__msg += self.__executor.get_message() + '\n'
                 return False
             self.__should_clear = False
         return True

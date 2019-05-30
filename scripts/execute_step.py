@@ -2,6 +2,7 @@
 # _*_ coding: utf-8 _*_
 
 from func import *
+from sql_executor import SqlExecutor
 
 
 class ExecuteStep(object):
@@ -46,6 +47,23 @@ class ExecuteStep(object):
         else:
             return self.UNSURPPORT
 
+    def __create_executor(self, name):
+        executor = None
+        suffix = file_suffix(name)
+        if suffix == 'sql':
+            executor = SqlExecutor(name, self.__path, self.__log)
+        elif suffix == 'sh':
+            pass
+        elif suffix == 'py':
+            pass
+        elif suffix == 'pl':
+            pass
+        elif suffix == '':
+            pass
+        if not executor:
+            self.__msg = 'fail to create exeutor from name %s' % name
+        return executor
+
     def prepare(self):
         if self.__prepare:
             print 'prepare: %s' % self.__prepare
@@ -53,8 +71,16 @@ class ExecuteStep(object):
 
     def excute(self):
         if self.__execute:
-            print 'execute: %s' % self.__execute
-        return True
+            executor = self.__create_executor(self.__execute)
+            if not executor:
+                return False
+            if executor.execute():
+                return True
+            else:
+                self.__msg += executor.get_message() + '\n'
+                return False
+        else:
+            return True
 
     def clear(self):
         if self.__clear:

@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <list>
     <case name="c1" type="" level="smoke" prepare="" execute="p1" clear="" compare="" report=""/>
-    <case name="c2" type="" level="normal" prepare="" execute="p2" clear="" compare="" report=""/>
+    <case name="c2" type="" level="normal" prepare="" execute="p2.sql" clear="" compare="" report=""/>
     <case name="c3" type="" level="full" prepare="" execute="p3" clear="" compare="" report=""/>
     <case name="c4" type="" level="" prepare="" execute="p4" clear="" compare="" report=""/>
     <!--<case name="c5" type="" level="" prepare="" execute="" clear="" compare="" report=""/>-->

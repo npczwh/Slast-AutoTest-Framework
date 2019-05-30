@@ -43,7 +43,7 @@ class ExecuteStepFactory(object):
             return False
         return True
 
-    def create_executor(self, name, context, type):
+    def create_step(self, name, context, type):
         step = None
         if not self.__filter(name):
             return None

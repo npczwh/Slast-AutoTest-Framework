@@ -37,7 +37,7 @@ class TestFramework(object):
 
     def __parse_conf(self):
         if not os.path.isfile(self.__config):
-            self.__msg += 'config file (%s) not found. ' % self.__config
+            self.__msg = 'config file (%s) not found. ' % self.__config
             return False
         self.__parser = ConfigParser.SafeConfigParser()
         self.__parser.read(self.__config)
@@ -55,7 +55,7 @@ class TestFramework(object):
             if int(skip):
                 return True
         if not config:
-            self.__msg += '%s config (%s) not found. ' % (type, self.__parser.get(type, 'config'))
+            self.__msg = '%s config (%s) not found. ' % (type, self.__parser.get(type, 'config'))
             return False
         env = None
         if type == 'cold swap':
@@ -63,7 +63,7 @@ class TestFramework(object):
         elif type == 'hot swap':
             env = EnvHotSwap(config, self.__log)
         else:
-            self.__msg += 'unsupported type (%s). ' % type
+            self.__msg = 'unsupported type (%s). ' % type
             return False
         self.__env_step = EnvStep(env, self.__env_step)
         return True
@@ -84,7 +84,7 @@ class TestFramework(object):
                 continue
             if level < self.__level:
                 continue
-            executor = factory.create_executor(file_short_name(item), file_short_name(item), 'normal')
+            executor = factory.create_step(file_short_name(item), file_short_name(item), 'normal')
             if executor:
                 self.__executor_list.append(executor)
 
@@ -93,7 +93,7 @@ class TestFramework(object):
             level = self.__level_num(item['level'])
             if level < self.__level:
                 continue
-            executor = factory.create_executor(item['name'], item, 'xml')
+            executor = factory.create_step(item['name'], item, 'xml')
             if executor:
                 self.__executor_list.append(executor)
 
@@ -111,7 +111,7 @@ class TestFramework(object):
             root = tree.getroot()
             for test in root:
                 if not test.get('name'):
-                    self.__msg += 'name not found in %s' % name
+                    self.__msg = 'name not found in %s ' % name
                     break
                 else:
                     one_list.append(test.attrib)
@@ -121,7 +121,7 @@ class TestFramework(object):
             if reader.readfile(name):
                 one_list = reader.get_list()
             else:
-                self.__msg += reader.get_message()
+                self.__msg = reader.get_message()
         return one_list
 
     def __create_executors(self):
@@ -132,7 +132,7 @@ class TestFramework(object):
 
         factory = ExecuteStepFactory()
         if not factory.init(whitelist_name, blacklist_name, begin_at, self.__path, self.__log):
-            self.__msg += factory.get_message()
+            self.__msg = factory.get_message()
             return False
 
         list_files = line_to_list(self.__parser.get('suite', 'list'))
@@ -145,7 +145,7 @@ class TestFramework(object):
             self.__add_one_list(factory, one_list, list_type)
 
         if not len(self.__executor_list):
-            self.__msg += 'the real test list is empty'
+            self.__msg = 'the real test list is empty '
             return False
         return True
 
@@ -157,10 +157,11 @@ class TestFramework(object):
             ret = executor.excute()
         if type == 'compare':
             ret = executor.compare()
-            print '%s failed' % executor.get_name()
         if type == 'clear':
             ret = executor.clear()
-        self.__msg += executor.get_message()
+        if not ret:
+            self.__msg += executor.get_message()
+            print '%s failed' % executor.get_name()
         if not ret and self.__mode == self.STRICT and type != 'compare':
             return False
         else:
