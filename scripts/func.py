@@ -4,6 +4,11 @@
 import os
 
 
+def write_file(filename, mode, buf):
+    with open(filename, mode) as f:
+        return f.write(buf)
+
+
 def read_file(filename):
     with open(filename) as f:
         return f.read()
