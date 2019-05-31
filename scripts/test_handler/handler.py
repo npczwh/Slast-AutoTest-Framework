@@ -7,6 +7,9 @@ class Handler(object):
         self.log = log
         self.msg = ''
 
+    def execute(self):
+        pass
+
     def get_message(self):
         return self.msg
 

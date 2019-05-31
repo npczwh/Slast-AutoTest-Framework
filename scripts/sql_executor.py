@@ -19,6 +19,6 @@ class SqlExecutor(Executor):
         output = None
         if not self.execute_command(cmd, output):
             return False
-        result_file = self.path + '\\case\\' + file_base_name(self.target) + '.result'
+        result_file = self.path + '\\result\\' + file_base_name(self.target) + '.result'
         write_file(result_file, 'w', output)
         return True

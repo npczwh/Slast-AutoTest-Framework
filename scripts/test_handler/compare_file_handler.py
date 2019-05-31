@@ -7,3 +7,6 @@ from handler import Handler
 class CompareFileHandler(Handler):
     def __init__(self, log):
         super(CompareFileHandler, self).__init__(log)
+
+    def execute(self):
+        print 'CompareFileHandler execute '

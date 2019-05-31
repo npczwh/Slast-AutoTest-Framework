@@ -22,9 +22,9 @@ class Executor(object):
     def execute_command(self, cmd, output):
         (status, output) = commands.getstatusoutput(cmd)
         if status != 0:
-            self.msg += '%s \n' % status
-            self.msg += '%s \n' % output
             self.msg += 'fail to execute command: %s ' % cmd
+            self.msg += 'status: %s \n' % status
+            self.msg += 'output: %s \n' % output
             return False
         return True
 

@@ -3,6 +3,9 @@
 
 from func import *
 from sql_executor import SqlExecutor
+from shell_executor import ShellExecutor
+from perl_executor import PerlExecutor
+from handler_executor import HandlerExecutor
 
 
 class ExecuteStep(object):
@@ -53,13 +56,13 @@ class ExecuteStep(object):
         if suffix == 'sql':
             executor = SqlExecutor(name, self.__path, self.__log)
         elif suffix == 'sh':
-            pass
+            executor = ShellExecutor(name, self.__path, self.__log)
         elif suffix == 'py':
             pass
         elif suffix == 'pl':
-            pass
+            executor = PerlExecutor(name, self.__path, self.__log)
         elif suffix == '':
-            pass
+            executor = HandlerExecutor(name, self.__path, self.__log)
         if not executor:
             self.__msg = 'fail to create exeutor from name %s' % name
         return executor
@@ -74,7 +77,7 @@ class ExecuteStep(object):
             executor = self.__create_executor(self.__execute)
             if not executor:
                 return False
-            if executor.execute():
+            if executor.execute:
                 return True
             else:
                 self.__msg += executor.get_message() + '\n'

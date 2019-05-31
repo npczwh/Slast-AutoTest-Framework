@@ -203,7 +203,7 @@ class TestFramework(object):
 
         self.__env_step = self.__env_step.get_root()
         while self.__env_step.to_next():
-            if self.__env_step.execute() and self.__execute():
+            if self.__env_step.execute and self.__execute():
                 pass
             else:
                 self.__msg += self.__env_step.get_and_clear_message()
