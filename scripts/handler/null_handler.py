@@ -5,8 +5,8 @@ from handler import Handler
 
 
 class NullHandler(Handler):
-    def __init__(self, context, log):
-        super(NullHandler, self).__init__(context, log)
+    def __init__(self, context, path, log):
+        super(NullHandler, self).__init__(context, path, log)
 
     def execute(self):
         return True

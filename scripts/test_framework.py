@@ -20,6 +20,7 @@ class TestFramework(object):
     STRICT = 1
     TOLERATE = 2
 
+    # todo: add param to get expect only
     def __init__(self, path, level_name):
         self.__path = path
         self.__config = path + '\\conf\\' + file_short_name(self.__path) + '.conf'
@@ -168,7 +169,7 @@ class TestFramework(object):
         if not ret:
             print '%s failed' % executor.get_name()
             self.__log.error('%s failed' % executor.get_name())
-            self.__log.error('\t%s %s failed: ' % (type, executor.get_name()))
+            self.__log.error('%s %s failed: ' % (type, executor.get_name()))
             self.__log.error(executor.get_message())
         if not ret and self.__mode == self.STRICT and type != 'compare':
             return False

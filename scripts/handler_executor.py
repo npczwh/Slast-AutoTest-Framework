@@ -36,7 +36,7 @@ class HandlerExecutor(Executor):
             self.msg = 'find module name of %s failed ' % self.target
             return False
         module = importlib.import_module(module_name)
-        handler = getattr(module, self.target)(self.context, self.log)
+        handler = getattr(module, self.target)(self.context, self.path, self.log)
         if not handler.execute():
             self.msg = handler.get_message()
             return False
