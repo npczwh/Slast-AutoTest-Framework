@@ -2,11 +2,12 @@
 # _*_ coding: utf-8 _*_
 
 import importlib
-import sys
 from executor import Executor
 
 
 class HandlerExecutor(Executor):
+    HANDLER_MODULE = 'handler'
+
     handlers = {}
 
     def __init__(self, target, path, log):
@@ -18,10 +19,10 @@ class HandlerExecutor(Executor):
         if len(HandlerExecutor.handlers):
             return
 
-        package = importlib.import_module('test_handler')
+        package = importlib.import_module(HandlerExecutor.HANDLER_MODULE)
         module_names = getattr(package, '__all__')
         for name in module_names:
-            full_name = 'test_handler.' + name
+            full_name = HandlerExecutor.HANDLER_MODULE + '.' + name
             module = importlib.import_module(full_name)
             for attr in dir(module):
                 if not attr.startswith('__'):
@@ -35,7 +36,8 @@ class HandlerExecutor(Executor):
             self.msg = 'find module name of %s failed ' % self.target
             return False
         module = importlib.import_module(module_name)
-        handler = getattr(module, self.target)(self.log)
-        handler.execute()
-
+        handler = getattr(module, self.target)(self.context, self.log)
+        if not handler.execute():
+            self.msg = handler.get_message()
+            return False
         return True

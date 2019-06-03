@@ -11,6 +11,7 @@ from env_hot_swap import EnvHotSwap
 from list_reader import ListReader
 from execute_step_factory import ExecuteStepFactory
 
+
 class TestFramework(object):
     FULL = 1
     NORMAL = 2
@@ -91,7 +92,7 @@ class TestFramework(object):
                 continue
             if level < self.__level:
                 continue
-            executor = factory.create_step(file_short_name(item), file_short_name(item), 'normal')
+            executor = factory.create_step(file_short_name(item), 'normal')
             if executor:
                 self.__executor_list.append(executor)
 
@@ -102,7 +103,7 @@ class TestFramework(object):
                 level = self.__level_num(item['level'])
             if level < self.__level:
                 continue
-            executor = factory.create_step(item['name'], item, 'xml')
+            executor = factory.create_step(item, 'xml')
             if executor:
                 self.__executor_list.append(executor)
 
@@ -119,11 +120,7 @@ class TestFramework(object):
             tree = ET.parse(name)
             root = tree.getroot()
             for test in root:
-                if not test.get('name'):
-                    self.__msg = 'name not found in %s ' % name
-                    break
-                else:
-                    one_list.append(test.attrib)
+                one_list.append(test.attrib)
         else:
             reader = ListReader()
             reader.set_base_path(self.__path + '\\case')
@@ -159,14 +156,14 @@ class TestFramework(object):
         return True
 
     def __get_execute_ret(self, executor, type):
-        ret = True
+        ret = False
         if type == 'prepare':
             ret = executor.prepare()
-        if type == 'excute':
+        elif type == 'excute':
             ret = executor.excute()
-        if type == 'compare':
+        elif type == 'compare':
             ret = executor.compare()
-        if type == 'clear':
+        elif type == 'clear':
             ret = executor.clear()
         if not ret:
             print '%s failed' % executor.get_name()

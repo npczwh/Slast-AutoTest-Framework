@@ -18,9 +18,9 @@ class ExecuteStep(object):
 
     DEFAULT_COMPARE_HANDLER = 'CompareFileHandler'
 
-    def __init__(self, name, path, log):
+    def __init__(self, path, log):
         self.__msg = ''
-        self.__name = name
+        self.__name = None
         self.__prepare = None
         self.__clear = None
         self.__execute = None
@@ -33,20 +33,25 @@ class ExecuteStep(object):
 
     def set_extra_attr(self, context):
         if context.get('prepare', None):
-            self.__prepare = context['prepare']
+            self.__prepare = context['prepare'].strip()
         if context.get('execute', None):
-            self.__execute = context['execute']
+            self.__execute = context['execute'].strip()
+            self.__name = file_short_name(self.__execute)
+        else:
+            if context.get('name', None):
+                self.__name = context['name'].strip()
         if context.get('clear', None):
-            self.__clear = context['clear']
+            self.__clear = context['clear'].strip()
         if context.get('compare_handler', None):
-            self.__compare_handler = context['compare_handler']
+            self.__compare_handler = context['compare_handler'].strip()
         if context.get('execute_handler', None):
-            self.__execute_handler = context['execute_handler']
+            self.__execute_handler = context['execute_handler'].strip()
         if context.get('execute_config', None):
-            self.__execute_config = context['execute_config']
+            self.__execute_config = context['execute_config'].strip()
 
     def set_execute_name(self, execute):
         self.__execute = execute
+        self.__name = file_short_name(self.__execute)
 
     def get_name(self):
         return self.__name
@@ -103,11 +108,19 @@ class ExecuteStep(object):
             executor = self.__create_executor(self.__execute)
         elif self.__execute_handler:
             executor = self.__create_executor(self.__execute_handler)
-            executor.set_context()
         else:
-            self.__msg = 'execute and execute handler is empty, fail to create exeutor '
+            self.__msg = 'execute and execute handler are both empty, fail to create exeutor '
         if not executor:
             return False
+
+        if self.__execute_handler and self.__execute_config:
+            d = str_to_dict(self.__execute_config)
+            if d:
+                executor.set_context(d)
+            else:
+                self.__msg = 'transform execute config (%s) to dict fail ' % self.__execute_config
+                return False
+
         self.__log.info('case %s: execute ' % self.__name)
         if executor.execute():
             return True
@@ -136,6 +149,9 @@ class ExecuteStep(object):
             self.__log.debug('case %s: compare handler empty, use default handler %s '
                              % (self.__name, self.DEFAULT_COMPARE_HANDLER))
             executor = self.__create_executor(self.DEFAULT_COMPARE_HANDLER)
+        if not executor:
+            return False
+        executor.set_context(self.__name)
         self.__log.info('case %s: compare ' % self.__name)
         if executor.execute():
             return True

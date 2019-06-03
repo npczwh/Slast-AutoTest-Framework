@@ -43,18 +43,20 @@ class ExecuteStepFactory(object):
             return False
         return True
 
-    def create_step(self, name, context, type):
+    def create_step(self, context, type):
         step = None
-        if not self.__filter(name):
-            return None
         if type == 'xml':
-            step = ExecuteStep(name, self.__path, self.__log)
+            step = ExecuteStep(self.__path, self.__log)
             step.set_extra_attr(context)
         else:
-            step = ExecuteStep(name, self.__path, self.__log)
+            step = ExecuteStep(self.__path, self.__log)
             step.set_execute_name(context)
-            if step.get_type(name) != step.SQL:
-                step = None
+            if step.get_type(step.get_name()) != step.SQL:
+                return None
+        if not step.get_name():
+            return None
+        if not self.__filter(step.get_name()):
+            return None
         return step
 
     def get_message(self):

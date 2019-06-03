@@ -2,6 +2,7 @@
 # _*_ coding: utf-8 _*_
 
 import os
+import ast
 
 
 def write_file(filename, mode, buf):
@@ -59,6 +60,15 @@ def line_to_list(line):
     for i in range(len(list)):
         list[i] = list[i].strip()
     return list
+
+
+def str_to_dict(s):
+    d = None
+    try:
+        d = ast.literal_eval(s)
+    except Exception as e:
+        pass
+    return d
 
 
 if __name__ == '__main__':

@@ -7,7 +7,8 @@ from abc import ABCMeta, abstractmethod
 class Handler(object):
     __metaclass__ = ABCMeta
 
-    def __init__(self, log):
+    def __init__(self, context, log):
+        self.context = context
         self.log = log
         self.msg = ''
 
