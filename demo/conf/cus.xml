@@ -1,10 +1,16 @@
 <?xml version='1.0' encoding='utf-8'?>
+    <!--<examples>-->
+    <!--<case execute="c5.py" compare_handler="NullHandler"/>-->
+    <!--<case execute="c6.sql"/>-->
+    <!--<case name="c7" execute_handler="ExampleHandler"/>-->
+    <!--<case name="c8" level="normal" prepare="" execute_handler="ExampleHandler" execute_config="" clear="" compare_handler=""/>-->
 <list>
     <case name="c1" level="smoke" prepare="" execute="p1" clear="" compare_handler="" execute_handler="" execute_config=""/>
     <case name="c2" level="normal" prepare="" execute="" compare_handler="CompareFileHandler" execute_handler="CompareFileHandler" execute_config=""/>
     <case name="c3" level="full" prepare="" execute="p3" clear="" compare_handler="" execute_handler="" execute_config=""/>
     <case name="c4" level="" prepare="" execute="p4" clear="" compare_handler="" execute_handler="" execute_config=""/>
     <!--<case name="c5" level="" prepare="" execute="" clear="" compare="" report=""/>-->
-    <case execute="c5.py" compare_handler="NullHandler"/>
-    <case name="c6" level="normal" prepare="" execute="" compare_handler="CompareFileHandler" execute_handler="CompareFileHandler" execute_config=""/>
+    <!--<case execute="c5.py" compare_handler="NullHandler"/>-->
+    <!--<case execute="c6.sql"/>-->
+    <case name="c7" level="normal" prepare="" execute_handler="NullHandler" execute_config="" clear="" />
 </list>

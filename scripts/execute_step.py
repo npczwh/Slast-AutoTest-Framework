@@ -5,6 +5,7 @@ from func import *
 from sql_executor import SqlExecutor
 from shell_executor import ShellExecutor
 from perl_executor import PerlExecutor
+from python_executor import PythonExecutor
 from handler_executor import HandlerExecutor
 
 
@@ -15,6 +16,10 @@ class ExecuteStep(object):
     PERL = 4
     HANDLER = 5
     UNSURPPORT = 6
+
+    HANDLER_ONLY = 1
+    NO_HANDLER = 2
+    ALL = 3
 
     DEFAULT_COMPARE_HANDLER = 'CompareFileHandler'
 
@@ -66,24 +71,26 @@ class ExecuteStep(object):
             return self.PYTHON
         elif suffix == 'pl':
             return self.PERL
-        elif suffix == '':
+        elif suffix == '' and name:
             return self.HANDLER
         else:
             return self.UNSURPPORT
 
-    def __create_executor(self, name):
+    def __create_executor(self, name, type):
         executor = None
         suffix = file_suffix(name)
-        if suffix == 'sql':
-            executor = SqlExecutor(name, self.__path, self.__log)
-        elif suffix == 'sh':
-            executor = ShellExecutor(name, self.__path, self.__log)
-        elif suffix == 'py':
-            pass
-        elif suffix == 'pl':
-            executor = PerlExecutor(name, self.__path, self.__log)
-        elif suffix == '' and name:
-            executor = HandlerExecutor(name, self.__path, self.__log)
+        if type == self.HANDLER_ONLY or type == self.ALL:
+            if suffix == '' and name:
+                executor = HandlerExecutor(name, self.__path, self.__log)
+        if type == self.NO_HANDLER or type == self.ALL:
+            if suffix == 'sql':
+                executor = SqlExecutor(name, self.__path, self.__log)
+            elif suffix == 'sh':
+                executor = ShellExecutor(name, self.__path, self.__log)
+            elif suffix == 'py':
+                executor = PythonExecutor(name, self.__path, self.__log)
+            elif suffix == 'pl':
+                executor = PerlExecutor(name, self.__path, self.__log)
         if not executor:
             self.__msg = 'fail to create exeutor from name %s' % name
         return executor
@@ -91,7 +98,7 @@ class ExecuteStep(object):
     def prepare(self):
         executor = None
         if self.__prepare:
-            executor = self.__create_executor(self.__prepare)
+            executor = self.__create_executor(self.__prepare, self.ALL)
         if not executor:
             self.__log.debug('case %s: prepare empty ' % self.__name)
             return True
@@ -105,9 +112,9 @@ class ExecuteStep(object):
     def excute(self):
         executor = None
         if self.__execute:
-            executor = self.__create_executor(self.__execute)
+            executor = self.__create_executor(self.__execute, self.NO_HANDLER)
         elif self.__execute_handler:
-            executor = self.__create_executor(self.__execute_handler)
+            executor = self.__create_executor(self.__execute_handler, self.HANDLER_ONLY)
         else:
             self.__msg = 'execute and execute handler are both empty, fail to create exeutor '
         if not executor:
@@ -131,7 +138,7 @@ class ExecuteStep(object):
     def clear(self):
         executor = None
         if self.__clear:
-            executor = self.__create_executor(self.__clear)
+            executor = self.__create_executor(self.__clear, self.ALL)
         if not executor:
             self.__log.debug('case %s: clear empty ' % self.__name)
             return True
@@ -144,11 +151,11 @@ class ExecuteStep(object):
 
     def compare(self):
         if self.__compare_handler:
-            executor = self.__create_executor(self.__compare_handler)
+            executor = self.__create_executor(self.__compare_handler, self.HANDLER_ONLY)
         else:
             self.__log.debug('case %s: compare handler empty, use default handler %s '
                              % (self.__name, self.DEFAULT_COMPARE_HANDLER))
-            executor = self.__create_executor(self.DEFAULT_COMPARE_HANDLER)
+            executor = self.__create_executor(self.DEFAULT_COMPARE_HANDLER, self.HANDLER_ONLY)
         if not executor:
             return False
         executor.set_context(self.__name)
