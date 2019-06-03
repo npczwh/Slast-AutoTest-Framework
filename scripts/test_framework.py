@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # _*_ coding: utf-8 _*_
 
+import logging
 import ConfigParser
 import xml.etree.ElementTree as ET
 from func import *
@@ -9,7 +10,6 @@ from env_cold_swap import EnvColdSwap
 from env_hot_swap import EnvHotSwap
 from list_reader import ListReader
 from execute_step_factory import ExecuteStepFactory
-
 
 class TestFramework(object):
     FULL = 1
@@ -27,6 +27,13 @@ class TestFramework(object):
         self.__level = self.__level_num(level_name)
         self.__mode = None
         self.__log = None
+        formatter = logging.Formatter('%(asctime)s %(filename)s[line:%(lineno)d] %(message)s')
+        # todo: log path, log level
+        handler = logging.FileHandler('tmp.log')
+        handler.setFormatter(formatter)
+        self.__log = logging.getLogger()
+        self.__log.addHandler(handler)
+        self.__log.setLevel(logging.INFO)
         self.__msg = ''
 
     def get_name(self):
@@ -90,7 +97,9 @@ class TestFramework(object):
 
     def __add_one_xml_list(self, factory, list):
         for item in list:
-            level = self.__level_num(item['level'])
+            level = self.NORMAL
+            if item.get('level', None):
+                level = self.__level_num(item['level'])
             if level < self.__level:
                 continue
             executor = factory.create_step(item['name'], item, 'xml')
@@ -161,8 +170,9 @@ class TestFramework(object):
             ret = executor.clear()
         if not ret:
             print '%s failed' % executor.get_name()
-            self.__msg += '\t%s %s failed: \n' % (type, executor.get_name())
-            self.__msg += executor.get_message()
+            self.__log.error('%s failed' % executor.get_name())
+            self.__log.error('\t%s %s failed: ' % (type, executor.get_name()))
+            self.__log.error(executor.get_message())
         if not ret and self.__mode == self.STRICT and type != 'compare':
             return False
         else:
@@ -173,11 +183,14 @@ class TestFramework(object):
             if not self.__get_execute_ret(executor, 'prepare'):
                 return False
             if not self.__get_execute_ret(executor, 'excute'):
+                self.__get_execute_ret(executor, 'clear')
                 return False
             if not self.__get_execute_ret(executor, 'compare'):
+                self.__get_execute_ret(executor, 'clear')
                 return False
             if not self.__get_execute_ret(executor, 'clear'):
                 return False
+            executor.reset()
         return True
 
     def __level_num(self, name):
@@ -204,7 +217,7 @@ class TestFramework(object):
 
         self.__env_step = self.__env_step.get_root()
         while self.__env_step.to_next():
-            if self.__env_step.execute and self.__execute():
+            if self.__env_step.execute() and self.__execute():
                 pass
             else:
                 self.__msg += self.__env_step.get_and_clear_message()

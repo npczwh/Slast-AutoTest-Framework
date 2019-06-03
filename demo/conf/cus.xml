@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
 <list>
     <case name="c1" level="smoke" prepare="" execute="p1" clear="" compare_handler="" execute_handler="" execute_config=""/>
-    <case name="c2" level="normal" prepare="" execute="CompareFileHandler" clear="" compare=""/>
-    <case name="c3" level="full" prepare="" execute="p3" clear="" compare=""/>
-    <case name="c4" level="" prepare="" execute="p4" clear="" compare="" report=""/>
+    <case name="c2" level="normal" prepare="" execute="CompareFileHandler" compare_handler="CompareFileHandler" execute_handler="" execute_config=""/>
+    <case name="c3" level="full" prepare="" execute="p3" clear="" compare_handler="" execute_handler="" execute_config=""/>
+    <case name="c4" level="" prepare="" execute="p4" clear="" compare_handler="" execute_handler="" execute_config=""/>
     <!--<case name="c5" level="" prepare="" execute="" clear="" compare="" report=""/>-->
 </list>

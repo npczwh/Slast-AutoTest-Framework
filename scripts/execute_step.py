@@ -16,21 +16,37 @@ class ExecuteStep(object):
     HANDLER = 5
     UNSURPPORT = 6
 
-    def __init__(self, name, execute, path, log):
+    DEFAULT_COMPARE_HANDLER = 'CompareFileHandler'
+
+    def __init__(self, name, path, log):
         self.__msg = ''
         self.__name = name
         self.__prepare = None
-        self.__execute = execute
         self.__clear = None
-        self.__compare = None
+        self.__execute = None
+        self.__compare_handler = None
+        self.__execute_handler = None
+        self.__execute_config = None
         # todo: handle parallel write
         self.__path = path
         self.__log = log
 
-    def set_extra_attr(self, prepare, clear, compare):
-        self.__prepare = prepare
-        self.__clear = clear
-        self.__compare = compare
+    def set_extra_attr(self, context):
+        if context.get('prepare', None):
+            self.__prepare = context['prepare']
+        if context.get('execute', None):
+            self.__execute = context['execute']
+        if context.get('clear', None):
+            self.__clear = context['clear']
+        if context.get('compare_handler', None):
+            self.__compare_handler = context['compare_handler']
+        if context.get('execute_handler', None):
+            self.__execute_handler = context['execute_handler']
+        if context.get('execute_config', None):
+            self.__execute_config = context['execute_config']
+
+    def set_execute_name(self, execute):
+        self.__execute = execute
 
     def get_name(self):
         return self.__name
@@ -61,39 +77,74 @@ class ExecuteStep(object):
             pass
         elif suffix == 'pl':
             executor = PerlExecutor(name, self.__path, self.__log)
-        elif suffix == '':
+        elif suffix == '' and name:
             executor = HandlerExecutor(name, self.__path, self.__log)
         if not executor:
             self.__msg = 'fail to create exeutor from name %s' % name
         return executor
 
     def prepare(self):
+        executor = None
         if self.__prepare:
-            print 'prepare: %s' % self.__prepare
-        return True
+            executor = self.__create_executor(self.__prepare)
+        if not executor:
+            self.__log.debug('case %s: prepare empty ' % self.__name)
+            return True
+        self.__log.info('case %s: prepare ' % self.__name)
+        if executor.execute():
+            return True
+        else:
+            self.__msg += executor.get_message() + '\n'
+            return False
 
     def excute(self):
+        executor = None
         if self.__execute:
             executor = self.__create_executor(self.__execute)
-            if not executor:
-                return False
-            if executor.execute():
-                return True
-            else:
-                self.__msg += executor.get_message() + '\n'
-                return False
+        elif self.__execute_handler:
+            executor = self.__create_executor(self.__execute_handler)
+            executor.set_context()
         else:
+            self.__msg = 'execute and execute handler is empty, fail to create exeutor '
+        if not executor:
+            return False
+        self.__log.info('case %s: execute ' % self.__name)
+        if executor.execute():
             return True
+        else:
+            self.__msg += executor.get_message() + '\n'
+            return False
 
     def clear(self):
+        executor = None
         if self.__clear:
-            print 'clear: %s' % self.__clear
-        return True
+            executor = self.__create_executor(self.__clear)
+        if not executor:
+            self.__log.debug('case %s: clear empty ' % self.__name)
+            return True
+        self.__log.info('case %s: clear ' % self.__name)
+        if executor.execute():
+            return True
+        else:
+            self.__msg += executor.get_message() + '\n'
+            return False
 
     def compare(self):
-        if self.__compare:
-            print 'compare: %s' % self.__compare
-        return True
+        if self.__compare_handler:
+            executor = self.__create_executor(self.__compare_handler)
+        else:
+            self.__log.debug('case %s: compare handler empty, use default handler %s '
+                             % (self.__name, self.DEFAULT_COMPARE_HANDLER))
+            executor = self.__create_executor(self.DEFAULT_COMPARE_HANDLER)
+        self.__log.info('case %s: compare ' % self.__name)
+        if executor.execute():
+            return True
+        else:
+            self.__msg += executor.get_message() + '\n'
+            return False
+
+    def reset(self):
+        self.__msg = ''
 
     def get_message(self):
         return self.__msg

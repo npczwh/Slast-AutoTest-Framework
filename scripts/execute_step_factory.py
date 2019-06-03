@@ -48,10 +48,11 @@ class ExecuteStepFactory(object):
         if not self.__filter(name):
             return None
         if type == 'xml':
-            step = ExecuteStep(name, context['execute'], self.__path, self.__log)
-            step.set_extra_attr(context['prepare'], context['clear'], context['compare'])
+            step = ExecuteStep(name, self.__path, self.__log)
+            step.set_extra_attr(context)
         else:
-            step = ExecuteStep(name, context, self.__path, self.__log)
+            step = ExecuteStep(name, self.__path, self.__log)
+            step.set_execute_name(context)
             if step.get_type(name) != step.SQL:
                 step = None
         return step

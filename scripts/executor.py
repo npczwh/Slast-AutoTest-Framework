@@ -11,6 +11,7 @@ class Executor(object):
     def __init__(self, target, path, log):
         self.target = target
         self.path = path
+        self.context = None
         self.output = None
         self.log = log
         self.msg = ''
@@ -18,6 +19,9 @@ class Executor(object):
     @abstractmethod
     def execute(self):
         pass
+
+    def set_context(self, context):
+        self.context = context
 
     def execute_command(self, cmd):
         (status, self.output) = commands.getstatusoutput(cmd)
