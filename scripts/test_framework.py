@@ -160,8 +160,9 @@ class TestFramework(object):
         if type == 'clear':
             ret = executor.clear()
         if not ret:
-            self.__msg += executor.get_message()
             print '%s failed' % executor.get_name()
+            self.__msg += '\t%s %s failed: \n' % (type, executor.get_name())
+            self.__msg += executor.get_message()
         if not ret and self.__mode == self.STRICT and type != 'compare':
             return False
         else:

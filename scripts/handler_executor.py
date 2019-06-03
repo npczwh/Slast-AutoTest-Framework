@@ -29,11 +29,10 @@ class HandlerExecutor(Executor):
                     if not value:
                         HandlerExecutor.handlers[attr] = full_name
 
-    @property
     def execute(self):
         module_name = HandlerExecutor.handlers.get(self.target, None)
         if not module_name:
-            self.msg = 'find module name of %s failed ' %  self.target
+            self.msg = 'find module name of %s failed ' % self.target
             return False
         module = importlib.import_module(module_name)
         handler = getattr(module, self.target)(self.log)

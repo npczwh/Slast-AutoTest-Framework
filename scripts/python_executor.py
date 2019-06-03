@@ -4,14 +4,14 @@
 from executor import Executor
 
 
-class PerlExecutor(Executor):
+class PythonExecutor(Executor):
     def __init__(self, target, path, log):
-        super(PerlExecutor, self).__init__(target, path, log)
+        super(PythonExecutor, self).__init__(target, path, log)
 
     def execute(self):
-        perl = self.path + '\\scripts\\' + self.target
-        cmd = "perl %s" % perl
-        self.msg = 'execute perl: %s \n' % perl
+        python = self.path + '\\scripts\\' + self.target
+        cmd = "python %s" % python
+        self.msg = 'execute python: %s \n' % python
         if not self.execute_command(cmd):
             return False
         print self.output

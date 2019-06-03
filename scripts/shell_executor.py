@@ -10,10 +10,9 @@ class ShellExecutor(Executor):
 
     def execute(self):
         shell = self.path + '\\scripts\\' + self.target
-        cmd = "sh %s" % (shell)
+        cmd = "sh %s" % shell
         self.msg = 'execute shell: %s \n' % shell
-        output = None
-        if not self.execute_command(cmd, output):
+        if not self.execute_command(cmd):
             return False
-        print output
+        print self.output
         return True

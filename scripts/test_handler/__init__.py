@@ -1,1 +1,1 @@
-__all__ = ['compare_file_handler', 'handler']
+__all__ = ['compare_file_handler']

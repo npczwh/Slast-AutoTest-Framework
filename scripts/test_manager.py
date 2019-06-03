@@ -62,7 +62,7 @@ class TestManager(object):
         ret = True
         for suite in self.__suites:
             if not suite.run():
-                self.__msg += '\n\tRun suite %s error: %s' % (suite.get_name(), suite.get_message())
+                self.__msg += '\nRun suite %s error: \n%s' % (suite.get_name(), suite.get_message())
                 ret = False
         return ret
 

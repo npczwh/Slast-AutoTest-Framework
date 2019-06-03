@@ -11,20 +11,20 @@ class Executor(object):
     def __init__(self, target, path, log):
         self.target = target
         self.path = path
+        self.output = None
         self.log = log
-        self.__handler = None
         self.msg = ''
 
     @abstractmethod
     def execute(self):
         pass
 
-    def execute_command(self, cmd, output):
-        (status, output) = commands.getstatusoutput(cmd)
+    def execute_command(self, cmd):
+        (status, self.output) = commands.getstatusoutput(cmd)
         if status != 0:
-            self.msg += 'fail to execute command: %s ' % cmd
+            self.msg += 'fail to execute command: %s \n' % cmd
             self.msg += 'status: %s \n' % status
-            self.msg += 'output: %s \n' % output
+            self.msg += 'output: %s \n' % self.output
             return False
         return True
 

@@ -77,7 +77,7 @@ class ExecuteStep(object):
             executor = self.__create_executor(self.__execute)
             if not executor:
                 return False
-            if executor.execute:
+            if executor.execute():
                 return True
             else:
                 self.__msg += executor.get_message() + '\n'
