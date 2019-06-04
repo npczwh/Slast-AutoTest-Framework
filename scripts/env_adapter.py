@@ -1,16 +1,18 @@
 #!/usr/bin/env python
 # _*_ coding: utf-8 _*_
 
-from env_base import EnvExecutorBase
 from env_item_iterator import EnvItemIterator
+from env_executor import EnvExecutor
 
 
-class EnvColdSwap(EnvExecutorBase):
-    def __init__(self, config, log):
-        super(EnvColdSwap, self).__init__(config, log)
+class EnvAdapter(object):
+    def __init__(self, name, config, log):
+        self.name = name
+        self.config = config
+        self.log = log
+        self.msg = ''
         self.iterator = None
         self.param = None
-        self.size = 1
 
     def init(self):
         items = [1]
@@ -48,3 +50,6 @@ class EnvColdSwap(EnvExecutorBase):
 
     def get_info(self):
         return str(self.param) + '\n'
+
+    def get_message(self):
+        return self.msg

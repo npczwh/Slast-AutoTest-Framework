@@ -6,8 +6,7 @@ import ConfigParser
 import xml.etree.ElementTree as ET
 from func import *
 from env_step import EnvStep
-from env_cold_swap import EnvColdSwap
-from env_hot_swap import EnvHotSwap
+from env_adapter import EnvAdapter
 from list_reader import ListReader
 from execute_step_factory import ExecuteStepFactory
 
@@ -57,25 +56,17 @@ class TestFramework(object):
         self.__mode = int(self.__parser.get('suite', 'test_mode').strip())
         return True
 
-    def __add_one_env(self, type):
+    def __add_one_env(self, name):
         conf_path = file_base_dir(self.__config)
-        config = real_file_name(conf_path, self.__parser.get(type, 'config'))
-        skip = self.__parser.get(type, 'skip').strip()
+        config = real_file_name(conf_path, self.__parser.get(name, 'config'))
+        skip = self.__parser.get(name, 'skip').strip()
         if skip:
             if int(skip):
                 return True
         if not config:
-            self.__msg = '%s config (%s) not found. ' % (type, self.__parser.get(type, 'config'))
+            self.__msg = '%s config (%s) not found. ' % (name, self.__parser.get(name, 'config'))
             return False
-        env = None
-        env = EnvColdSwap(config, self.__log)
-        # if type == 'cold swap':
-        #     env = EnvColdSwap(config, self.__log)
-        # elif type == 'hot swap':
-        #     env = EnvHotSwap(config, self.__log)
-        # else:
-        #     self.__msg = 'unsupported type (%s). ' % type
-        #     return False
+        env = EnvAdapter(name, config, self.__log)
         self.__env_step = EnvStep(env, self.__env_step)
         return True
 
