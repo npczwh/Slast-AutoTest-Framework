@@ -179,7 +179,7 @@ class TestFramework(object):
             return True
 
     def __prepare_path(self):
-        src = self.__path + '\\expect\\env' + str(self.__env_index)
+        src = self.__path + '\\expect_all\\env' + str(self.__env_index)
         des = self.__path + '\\expect'
         copy_path(src, des)
         re_mkdir(self.__path + '\\result')
