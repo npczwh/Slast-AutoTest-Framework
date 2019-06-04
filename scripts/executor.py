@@ -20,6 +20,9 @@ class Executor(object):
     def execute(self):
         pass
 
+    def set_path(self, path):
+        self.path = path
+
     def set_context(self, context):
         self.context = context
 

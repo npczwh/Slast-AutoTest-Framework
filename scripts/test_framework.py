@@ -37,6 +37,7 @@ class TestFramework(object):
         self.__log.addHandler(handler)
         self.__log.setLevel(logging.INFO)
         self.__msg = ''
+        self.__env_index = 0
 
     def get_name(self):
         return file_short_name(self.__path)
@@ -67,13 +68,14 @@ class TestFramework(object):
             self.__msg = '%s config (%s) not found. ' % (type, self.__parser.get(type, 'config'))
             return False
         env = None
-        if type == 'cold swap':
-            env = EnvColdSwap(config, self.__log)
-        elif type == 'hot swap':
-            env = EnvHotSwap(config, self.__log)
-        else:
-            self.__msg = 'unsupported type (%s). ' % type
-            return False
+        env = EnvColdSwap(config, self.__log)
+        # if type == 'cold swap':
+        #     env = EnvColdSwap(config, self.__log)
+        # elif type == 'hot swap':
+        #     env = EnvHotSwap(config, self.__log)
+        # else:
+        #     self.__msg = 'unsupported type (%s). ' % type
+        #     return False
         self.__env_step = EnvStep(env, self.__env_step)
         return True
 
@@ -214,7 +216,11 @@ class TestFramework(object):
             return self.__execute()
 
         self.__env_step = self.__env_step.get_root()
+        if not self.__env_step.init():
+            self.__msg += self.__env_step.get_and_clear_message()
+            return False
         while self.__env_step.to_next():
+            self.__env_index += 1
             if self.__env_step.execute() and self.__execute():
                 pass
             else:

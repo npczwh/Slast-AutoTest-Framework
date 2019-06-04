@@ -14,6 +14,9 @@ class EnvExecutorBase:
         self.size = 1
         self.msg = ''
 
+    def init(self):
+        return True
+
     def to_next(self):
         if self.index < self.size:
             self.index += 1
