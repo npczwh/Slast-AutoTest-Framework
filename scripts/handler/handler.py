@@ -17,6 +17,8 @@ class Handler(object):
     def execute(self):
         pass
 
+    def clear(self):
+        pass
+
     def get_message(self):
         return self.msg
-

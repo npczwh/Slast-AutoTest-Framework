@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='utf-8'?>
+<base>
+    <env handler="EnvConfigHandler">
+        <conf type="gbase">
+            <param name="trans">['', '']</param>
+        </conf>
+        <conf type="gcluster">
+            <param name="drs">['', '']</param>
+        </conf>
+    </env>
+    <env handler="EnvServiceHandler">
+        <service type="gcluster"/>
+    </env>
+</base>

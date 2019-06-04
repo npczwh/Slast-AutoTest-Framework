@@ -2,6 +2,7 @@
 # _*_ coding: utf-8 _*_
 
 
+# todo: refactoring with stack
 class EnvStep(object):
     def __init__(self, executor, parent):
         self.__single_child = None
