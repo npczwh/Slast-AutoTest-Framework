@@ -66,7 +66,7 @@ class TestFramework(object):
         if not config:
             self.__msg = '%s config (%s) not found. ' % (name, self.__parser.get(name, 'config'))
             return False
-        env = EnvAdapter(name, config, self.__log)
+        env = EnvAdapter(name, config, self.__path, self.__log)
         self.__env_step = EnvStep(env, self.__env_step)
         return True
 

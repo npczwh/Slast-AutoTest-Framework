@@ -32,8 +32,8 @@ class Executor(object):
             return False
         return True
 
-    def get_info(self):
-        pass
+    def get_target(self):
+        return self.target
 
     def get_message(self):
         return self.msg
