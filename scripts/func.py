@@ -73,17 +73,20 @@ def str_to_dict(s):
 
 
 def re_mkdir(path):
-    shutil.rmtree(path)
+    if os.path.exists(path):
+        shutil.rmtree(path)
     os.makedirs(path)
 
 
 def mov_path(src, des):
-    re_mkdir(des)
+    if os.path.exists(des):
+        shutil.rmtree(des)
     shutil.move(src, des)
 
 
 def copy_path(src, des):
-    re_mkdir(des)
+    if os.path.exists(des):
+        shutil.rmtree(des)
     shutil.copytree(src, des)
 
 

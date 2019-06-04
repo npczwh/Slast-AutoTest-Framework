@@ -186,7 +186,7 @@ class TestFramework(object):
 
     def __save_result(self):
         src = self.__path + '\\result'
-        des = self.__path + '\\result\\env' + str(self.__env_index)
+        des = self.__path + '\\result_all\\env' + str(self.__env_index)
         mov_path(src, des)
         env_file = des + '\\env_info'
         buf = self.__env_step.get_info()
