@@ -3,6 +3,7 @@
 
 import os
 import ast
+import shutil
 
 
 def write_file(filename, mode, buf):
@@ -69,6 +70,21 @@ def str_to_dict(s):
     except Exception as e:
         pass
     return d
+
+
+def re_mkdir(path):
+    shutil.rmtree(path)
+    os.makedirs(path)
+
+
+def mov_path(src, des):
+    re_mkdir(des)
+    shutil.move(src, des)
+
+
+def copy_path(src, des):
+    re_mkdir(des)
+    shutil.copytree(src, des)
 
 
 if __name__ == '__main__':

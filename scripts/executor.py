@@ -20,9 +20,6 @@ class Executor(object):
     def execute(self):
         pass
 
-    def set_path(self, path):
-        self.path = path
-
     def set_context(self, context):
         self.context = context
 
@@ -34,6 +31,9 @@ class Executor(object):
             self.msg += 'output: %s \n' % self.output
             return False
         return True
+
+    def get_info(self):
+        pass
 
     def get_message(self):
         return self.msg

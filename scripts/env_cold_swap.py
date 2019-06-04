@@ -45,3 +45,6 @@ class EnvColdSwap(EnvExecutorBase):
     def clear(self):
         print 'clear %s' % self.param
         return True
+
+    def get_info(self):
+        return str(self.param) + '\n'

@@ -178,6 +178,20 @@ class TestFramework(object):
         else:
             return True
 
+    def __prepare_path(self):
+        src = self.__path + '\\expect\\env' + str(self.__env_index)
+        des = self.__path + '\\expect'
+        copy_path(src, des)
+        re_mkdir(self.__path + '\\result')
+
+    def __save_result(self):
+        src = self.__path + '\\result'
+        des = self.__path + '\\result\\env' + str(self.__env_index)
+        mov_path(src, des)
+        env_file = des + '\\env_info'
+        buf = self.__env_step.get_info()
+        write_file(env_file, 'w', buf)
+
     def __execute(self):
         for executor in self.__executor_list:
             if not self.__get_execute_ret(executor, 'prepare'):
@@ -221,8 +235,9 @@ class TestFramework(object):
             return False
         while self.__env_step.to_next():
             self.__env_index += 1
+            self.__prepare_path()
             if self.__env_step.execute() and self.__execute():
-                pass
+                self.__save_result()
             else:
                 self.__msg += self.__env_step.get_and_clear_message()
             if not self.__env_step.clear():

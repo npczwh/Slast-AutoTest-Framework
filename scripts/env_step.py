@@ -90,6 +90,12 @@ class EnvStep(object):
             self.__should_clear = False
         return True
 
+    def get_info(self):
+        info = self.__executor.get_info()
+        if self.has_child():
+            info += self.__single_child.get_info()
+        return info
+
     def get_and_clear_message(self):
         msg = self.__msg
         self.__msg = ''
