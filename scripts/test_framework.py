@@ -212,6 +212,7 @@ class TestFramework(object):
 
     def run(self):
         print 'run with ' + self.__config
+        self.__log.debug('run with ' + self.__config)
         ret = True
         if not self.__parse_conf():
             return False
@@ -229,10 +230,20 @@ class TestFramework(object):
         while self.__env_step.to_next():
             self.__env_index += 1
             self.__prepare_path()
-            if self.__env_step.execute() and self.__execute():
+            if not self.__env_step.execute():
+                self.__msg += self.__env_step.get_and_clear_message()
+                if not self.__env_step.clear():
+                    self.__msg += self.__env_step.get_and_clear_message()
+                ret = False
+                break
+            if self.__execute():
                 self.__save_result()
             else:
+                if not self.__env_step.clear():
+                    self.__msg += self.__env_step.get_and_clear_message()
+                ret = False
                 self.__msg += self.__env_step.get_and_clear_message()
+                break
             if not self.__env_step.clear():
                 self.__msg += self.__env_step.get_and_clear_message()
                 ret = False

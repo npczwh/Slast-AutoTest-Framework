@@ -74,7 +74,7 @@ class EnvStep(object):
             self.__should_execute = False
         if self.has_child():
             if not self.__single_child.execute():
-                self.__msg += self.__executor.get_message() + '\n'
+                self.__msg += self.__single_child.get_message() + '\n'
                 return False
         return True
 

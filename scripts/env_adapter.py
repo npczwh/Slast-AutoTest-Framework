@@ -15,19 +15,26 @@ class EnvAdapter(object):
         self.msg = ''
         self.iterator = None
         self.conf = None
+        self.hosts = None
+        self.index = 0
         self.executors = []
 
     def parse_env(self, env, handler_name):
         for conf in env:
             attr = conf.attrib
             if not conf.text:
-                d = {handler_name:[attr, None]}
+                d = {'hosts':self.hosts, 'attr':attr, 'value':None}
+                d = {handler_name:d}
                 self.iterator = EnvItemIterator([d], self.iterator)
                 return True
-            params = conf.text.split(';')
+            values = conf.text.split(';')
+            if not len(values):
+                self.msg = 'values in conf not found in %s' % self.config
+                return False
             items = []
-            for param in params:
-                d = {handler_name:[attr, param]}
+            for value in values:
+                d = {'hosts': self.hosts, 'attr': attr, 'value': value}
+                d = {handler_name:d}
                 items.append(d)
             self.iterator = EnvItemIterator(items, self.iterator)
         return True
@@ -36,6 +43,10 @@ class EnvAdapter(object):
         handler_dict = {}
         tree = ET.parse(self.config)
         root = tree.getroot()
+        self.hosts = root.attrib.get('hosts', None)
+        if not self.hosts:
+            self.msg = 'hosts is not found in %s' % self.config
+            return False
         for env in root:
             attr = env.attrib
             handler_name = attr.get('handler', None)
@@ -79,19 +90,23 @@ class EnvAdapter(object):
 
     def execute(self):
         self.log.debug('exec %s: %s' % (self.name, self.conf))
-        for executor in self.executors:
-            executor.parse_conf(self.conf)
-            if not executor.execute():
-                self.msg = executor.get_message()
+        for i in range(len(self.executors)):
+            self.index = i + 1
+            self.executors[i].parse_conf(self.conf)
+            if not self.executors[i].execute():
+                self.msg = self.executors[i].get_message()
                 return False
         return True
 
     def clear(self):
         self.log.debug('clear %s: %s' % (self.name, self.conf))
-        for executor in self.executors:
-            if not executor.clear():
-                self.msg = executor.get_message()
+        if not self.index:
+            return True
+        for i in range(self.index):
+            if not self.executors[i].clear():
+                self.msg = self.executors[i].get_message()
                 return False
+        self.index = 0
         return True
 
     def get_info(self):
