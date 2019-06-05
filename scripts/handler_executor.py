@@ -31,13 +31,20 @@ class HandlerExecutor(Executor):
                         HandlerExecutor.handlers[attr] = full_name
 
     def execute(self):
-        module_name = HandlerExecutor.handlers.get(self.target, None)
-        if not module_name:
-            self.msg = 'find module name of %s failed ' % self.target
+        handler = self.create_handler()
+        if not handler:
             return False
-        module = importlib.import_module(module_name)
-        handler = getattr(module, self.target)(self.context, self.path, self.log)
+        handler.set_context(self.context)
         if not handler.execute():
             self.msg = handler.get_message()
             return False
         return True
+
+    def create_handler(self):
+        module_name = HandlerExecutor.handlers.get(self.target, None)
+        if not module_name:
+            self.msg = 'find module name of %s failed ' % self.target
+            return None
+        module = importlib.import_module(module_name)
+        handler = getattr(module, self.target)(self.path, self.log)
+        return handler

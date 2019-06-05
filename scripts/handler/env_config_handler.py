@@ -4,9 +4,12 @@
 from handler import Handler
 
 
-class NullHandler(Handler):
+class EnvConfigHandler(Handler):
     def __init__(self, path, log):
-        super(NullHandler, self).__init__(path, log)
+        super(EnvConfigHandler, self).__init__(path, log)
 
     def execute(self):
-        return True
+        pass
+
+    def clear(self):
+        pass

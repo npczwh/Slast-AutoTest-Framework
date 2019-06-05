@@ -3,9 +3,7 @@
 
 
 class EnvItemIterator(object):
-    def __init__(self, name, type, items, parent):
-        self.__name = name
-        self.__type = type
+    def __init__(self, items, parent):
         self.__items = items
         self.__parent = parent
         self.__child = None

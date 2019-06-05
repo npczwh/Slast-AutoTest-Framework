@@ -180,8 +180,10 @@ class TestFramework(object):
         des = self.__path + '\\result_all\\env' + str(self.__env_index)
         mov_path(src, des)
         env_file = des + '\\env_info'
-        buf = self.__env_step.get_info()
-        write_file(env_file, 'w', buf)
+        info = self.__env_step.get_info()
+        write_file(env_file, 'w', '')
+        for line in info:
+            write_file(env_file, 'a', str(line) + '\n')
 
     def __execute(self):
         for executor in self.__executor_list:

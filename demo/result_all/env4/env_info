@@ -1,1 +1,3 @@
-[['trans', '456'], ['drs', 'dbc'], None]
+{'EnvConfigHandler': [{'type': 'gbase', 'name': 'trans'}, '456']}
+{'EnvConfigHandler': [{'type': 'gcluster', 'name': 'drs'}, 'dbc']}
+{'EnvServiceHandler': [{'type': 'gcluster'}, 'restart']}

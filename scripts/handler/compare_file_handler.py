@@ -10,8 +10,8 @@ from func import *
 
 
 class CompareFileHandler(Handler):
-    def __init__(self, context, path, log):
-        super(CompareFileHandler, self).__init__(context, path, log)
+    def __init__(self, path, log):
+        super(CompareFileHandler, self).__init__(path, log)
 
     def execute(self):
         expect = self.path + '\\expect\\' + self.context + '.expect'
