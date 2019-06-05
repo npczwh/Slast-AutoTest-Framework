@@ -35,6 +35,7 @@ class ExecuteStep(object):
         # todo: handle parallel write
         self.__path = path
         self.__log = log
+        self.__res = False
 
     def set_extra_attr(self, context):
         if context.get('prepare', None):
@@ -147,6 +148,7 @@ class ExecuteStep(object):
             return True
         else:
             self.__msg += executor.get_message() + '\n'
+            self.__res = False
             return False
 
     def compare(self):
@@ -161,13 +163,18 @@ class ExecuteStep(object):
         executor.set_context(self.__name)
         self.__log.info('case %s: compare ' % self.__name)
         if executor.execute():
+            self.__res = True
             return True
         else:
             self.__msg += executor.get_message() + '\n'
             return False
 
     def reset(self):
+        self.__res = False
         self.__msg = ''
 
     def get_message(self):
         return self.__msg
+
+    def get_res(self):
+        return self.__res

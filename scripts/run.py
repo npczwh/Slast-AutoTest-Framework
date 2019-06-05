@@ -35,4 +35,4 @@ if __name__ == '__main__':
         if not manager.execute():
             print 'Run tests error: ' + manager.get_message()
         else:
-            print 'Test finish'
+            print 'All tests are finished'

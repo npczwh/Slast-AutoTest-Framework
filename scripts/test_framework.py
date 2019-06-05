@@ -19,7 +19,7 @@ class TestFramework(object):
     STRICT = 1
     TOLERATE = 2
 
-    # todo: add param to get expect only
+    # todo: add param to create expect only
     def __init__(self, path, level_name):
         self.__path = path
         self.__config = path + '/conf/' + file_short_name(self.__path) + '.conf'
@@ -160,7 +160,7 @@ class TestFramework(object):
         elif type == 'clear':
             ret = executor.clear()
         if not ret:
-            print '%s failed' % executor.get_name()
+            print '%s --------- fail' % executor.get_name()
             self.__log.error('%s failed' % executor.get_name())
             self.__log.error('%s %s failed: ' % (type, executor.get_name()))
             self.__log.error(executor.get_message())
@@ -197,6 +197,8 @@ class TestFramework(object):
                 return False
             if not self.__get_execute_ret(executor, 'clear'):
                 return False
+            if executor.get_res():
+                print '%s --------- success' % executor.get_name()
             executor.reset()
         return True
 
@@ -236,6 +238,8 @@ class TestFramework(object):
                     self.__msg += self.__env_step.get_and_clear_message()
                 ret = False
                 break
+            print 'env: ' + str(self.__env_step.get_info())
+            print 'sub test start'
             if self.__execute():
                 self.__save_result()
             else:
@@ -244,6 +248,7 @@ class TestFramework(object):
                 ret = False
                 self.__msg += self.__env_step.get_and_clear_message()
                 break
+            print 'sub test end'
             if not self.__env_step.clear():
                 self.__msg += self.__env_step.get_and_clear_message()
                 ret = False

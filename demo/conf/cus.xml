@@ -12,5 +12,5 @@
     <!--<case name="c5" level="" prepare="" execute="" clear="" compare="" report=""/>-->
     <!--<case execute="c5.py" compare_handler="NullHandler"/>-->
     <!--<case execute="c6.sql"/>-->
-    <case name="c7" level="normal" prepare="" execute_handler="NullHandler" execute_config="" clear="" />
+    <case name="c7" level="normal" execute_handler="NullHandler" execute_config=""/>
 </list>
