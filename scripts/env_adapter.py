@@ -44,9 +44,9 @@ class EnvAdapter(object):
         tree = ET.parse(self.config)
         root = tree.getroot()
         self.hosts = root.attrib.get('hosts', None)
-        if not self.hosts:
-            self.msg = 'hosts is not found in %s' % self.config
-            return False
+        # if not self.hosts:
+        #     self.msg = 'hosts is not found in %s' % self.config
+        #     return False
         for env in root:
             attr = env.attrib
             handler_name = attr.get('handler', None)

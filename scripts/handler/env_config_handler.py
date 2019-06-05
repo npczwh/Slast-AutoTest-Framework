@@ -22,6 +22,9 @@ class EnvConfigHandler(Handler):
         self.__config = {}
         for context in self.context:
             if not self.__hosts:
+                if context.get('hosts', None):
+                    self.msg = 'EnvConfigHandler execute failed: hosts is None '
+                    return False
                 self.__hosts = context['hosts'].split(',')
             attr = context['attr']
             type = attr.get('type', None)

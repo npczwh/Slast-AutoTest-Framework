@@ -1,3 +1,1 @@
-{'EnvConfigHandler': {'ip': '192.168.134.131', 'attr': {'type': 'gbase', 'name': 'trans'}, 'value': '123'}}
-{'EnvConfigHandler': {'ip': '192.168.134.131', 'attr': {'type': 'gcluster', 'name': 'drs'}, 'value': 'abc'}}
-{'EnvServiceHandler': {'ip': '192.168.134.131', 'attr': {'type': 'gcluster'}, 'value': 'restart'}}
+{'EnvServiceHandler': {'hosts': '192.168.134.131', 'attr': {'type': 'gcluster'}, 'value': 'restart'}}
