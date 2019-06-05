@@ -13,11 +13,11 @@ class SqlExecutor(Executor):
         self.__pwd = 'gbase20110531'
 
     def execute(self):
-        sql = self.path + '\\case\\' + self.target
+        sql = self.path + '/case/' + self.target
         cmd = "gccli -h%s -u%s -p%s -c -t -vv -f <%s" % (self.__host, self.__user, self.__pwd, sql)
         self.msg = 'execute sql: %s \n' % sql
         if not self.execute_command(cmd):
             return False
-        result_file = self.path + '\\result\\' + file_base_name(self.target) + '.result'
+        result_file = self.path + '/result/' + file_base_name(self.target) + '.result'
         write_file(result_file, 'w', self.output)
         return True

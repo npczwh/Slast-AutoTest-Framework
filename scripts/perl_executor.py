@@ -9,7 +9,7 @@ class PerlExecutor(Executor):
         super(PerlExecutor, self).__init__(target, path, log)
 
     def execute(self):
-        perl = self.path + '\\scripts\\' + self.target
+        perl = self.path + '/scripts/' + self.target
         cmd = "perl %s" % perl
         self.msg = 'execute perl: %s \n' % perl
         if not self.execute_command(cmd):

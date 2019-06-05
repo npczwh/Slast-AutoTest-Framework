@@ -1,10 +1,10 @@
 <?xml version='1.0' encoding='utf-8'?>
 <base>
     <env handler="EnvConfigHandler">
-        <conf type="gbase" name="trans">123;456</conf>
-        <conf type="gcluster" name="drs">abc;dbc</conf>
+        <conf type="gbase" ip="" name="trans">123;456</conf>
+        <conf type="gcluster" ip="" name="drs">abc</conf>
     </env>
     <env handler="EnvServiceHandler">
-        <conf type="gcluster">restart</conf>
+        <conf type="gcluster" ip="">restart</conf>
     </env>
 </base>

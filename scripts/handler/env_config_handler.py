@@ -9,7 +9,9 @@ class EnvConfigHandler(Handler):
         super(EnvConfigHandler, self).__init__(path, log)
 
     def execute(self):
-        pass
+        print 'EnvConfigHandler exec'
+        return True
 
     def clear(self):
-        pass
+        print 'EnvConfigHandler clear'
+        return True

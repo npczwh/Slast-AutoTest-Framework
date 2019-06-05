@@ -49,7 +49,7 @@ class ListReader(object):
             if lines[i][0] == '[' and lines[i][-1] == ']':
                 continue
             if checkfile:
-                lines[i] = self.__base_path + '\\' + lines[i]
+                lines[i] = self.__base_path + '/' + lines[i]
                 if not self.__target_exist(lines[i], isfile):
                     self.__msg = 'config file %s in %s is not found.' % (lines[i], filename)
                     return False

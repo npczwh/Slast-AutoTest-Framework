@@ -1,3 +1,3 @@
-{'EnvConfigHandler': [{'type': 'gbase', 'name': 'trans'}, '123']}
-{'EnvConfigHandler': [{'type': 'gcluster', 'name': 'drs'}, 'dbc']}
-{'EnvServiceHandler': [{'type': 'gcluster'}, 'restart']}
+{'EnvConfigHandler': [{'ip': '', 'type': 'gbase', 'name': 'trans'}, '456']}
+{'EnvConfigHandler': [{'ip': '', 'type': 'gcluster', 'name': 'drs'}, 'abc']}
+{'EnvServiceHandler': [{'ip': '', 'type': 'gcluster'}, 'restart']}

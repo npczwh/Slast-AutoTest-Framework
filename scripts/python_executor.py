@@ -9,7 +9,7 @@ class PythonExecutor(Executor):
         super(PythonExecutor, self).__init__(target, path, log)
 
     def execute(self):
-        python = self.path + '\\scripts\\' + self.target
+        python = self.path + '/scripts/' + self.target
         cmd = "python %s" % python
         self.msg = 'execute python: %s \n' % python
         if not self.execute_command(cmd):

@@ -14,8 +14,8 @@ class CompareFileHandler(Handler):
         super(CompareFileHandler, self).__init__(path, log)
 
     def execute(self):
-        expect = self.path + '\\expect\\' + self.context + '.expect'
-        result = self.path + '\\result\\' + self.context + '.result'
+        expect = self.path + '/expect/' + self.context + '.expect'
+        result = self.path + '/result/' + self.context + '.result'
 
         if not os.path.isfile(expect) or not os.path.isfile(result):
             self.msg = 'expect (%s) or result (%s) is not exists ' % (expect, result)
@@ -30,7 +30,7 @@ class CompareFileHandler(Handler):
                 ret = False
                 break
         if not ret:
-            diff = self.path + '\\result\\' + self.context + '.diff'
+            diff = self.path + '/result/' + self.context + '.diff'
             buf = ''.join(diff_list)
             write_file(diff, 'w', buf)
         return ret

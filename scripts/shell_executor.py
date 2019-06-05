@@ -9,7 +9,7 @@ class ShellExecutor(Executor):
         super(ShellExecutor, self).__init__(target, path, log)
 
     def execute(self):
-        shell = self.path + '\\scripts\\' + self.target
+        shell = self.path + '/scripts/' + self.target
         cmd = "sh %s" % shell
         self.msg = 'execute shell: %s \n' % shell
         if not self.execute_command(cmd):

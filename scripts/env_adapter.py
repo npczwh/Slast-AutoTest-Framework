@@ -3,9 +3,7 @@
 
 import xml.etree.ElementTree as ET
 from env_item_iterator import EnvItemIterator
-from handler_executor import HandlerExecutor
 from env_executor import EnvExecutor
-from func import *
 
 
 class EnvAdapter(object):
@@ -80,7 +78,7 @@ class EnvAdapter(object):
         self.iterator.reset()
 
     def execute(self):
-        print 'exec %s: %s' % (self.name, self.conf)
+        self.log.debug('exec %s: %s' % (self.name, self.conf))
         for executor in self.executors:
             executor.parse_conf(self.conf)
             if not executor.execute():
@@ -89,7 +87,7 @@ class EnvAdapter(object):
         return True
 
     def clear(self):
-        print 'clear %s: %s' % (self.name, self.conf)
+        self.log.debug('clear %s: %s' % (self.name, self.conf))
         for executor in self.executors:
             if not executor.clear():
                 self.msg = executor.get_message()

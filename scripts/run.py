@@ -9,7 +9,7 @@ from func import *
 
 
 def version():
-    filename = '%s\\__init__.py' % os.getcwd()
+    filename = '%s/__init__.py' % os.getcwd()
     return re.search("__version__ = '([0-9.]*)'", read_file(filename)).group(1)
 
 

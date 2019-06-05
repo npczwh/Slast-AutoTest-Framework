@@ -34,7 +34,7 @@ def file_base_name(filename):
 
 
 def file_abs_name(filename):
-    return file_base_dir(filename) + '\\' + file_short_name(filename)
+    return file_base_dir(filename) + '/' + file_short_name(filename)
 
 
 def file_suffix(filename):
@@ -48,7 +48,7 @@ def file_suffix(filename):
 def real_file_name(base_path, filename):
     real_filename = filename.strip()
     if not os.path.isfile(real_filename):
-        real_filename = base_path + '\\' + filename
+        real_filename = base_path + '/' + filename
         if not os.path.isfile(real_filename):
             real_filename = ''
     if real_filename:
@@ -92,7 +92,7 @@ def copy_path(src, des):
 
 if __name__ == '__main__':
     # test
-    name = '%s\\func.py' % os.getcwd()
+    name = '%s/func.py' % os.getcwd()
     print name
     print file_suffix(name)
     exit()

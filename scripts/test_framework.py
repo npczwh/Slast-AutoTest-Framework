@@ -22,7 +22,7 @@ class TestFramework(object):
     # todo: add param to get expect only
     def __init__(self, path, level_name):
         self.__path = path
-        self.__config = path + '\\conf\\' + file_short_name(self.__path) + '.conf'
+        self.__config = path + '/conf/' + file_short_name(self.__path) + '.conf'
         self.__env_step = None
         self.__executor_list = []
         self.__level = self.__level_num(level_name)
@@ -117,7 +117,7 @@ class TestFramework(object):
                 one_list.append(test.attrib)
         else:
             reader = ListReader()
-            reader.set_base_path(self.__path + '\\case')
+            reader.set_base_path(self.__path + '/case')
             if reader.readfile(name):
                 one_list = reader.get_list()
             else:
@@ -170,16 +170,16 @@ class TestFramework(object):
             return True
 
     def __prepare_path(self):
-        src = self.__path + '\\expect_all\\env' + str(self.__env_index)
-        des = self.__path + '\\expect'
+        src = self.__path + '/expect_all/env' + str(self.__env_index)
+        des = self.__path + '/expect'
         copy_path(src, des)
-        re_mkdir(self.__path + '\\result')
+        re_mkdir(self.__path + '/result')
 
     def __save_result(self):
-        src = self.__path + '\\result'
-        des = self.__path + '\\result_all\\env' + str(self.__env_index)
+        src = self.__path + '/result'
+        des = self.__path + '/result_all/env' + str(self.__env_index)
         mov_path(src, des)
-        env_file = des + '\\env_info'
+        env_file = des + '/env_info'
         info = self.__env_step.get_info()
         write_file(env_file, 'w', '')
         for line in info:
