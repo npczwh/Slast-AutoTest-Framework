@@ -89,7 +89,7 @@ class EnvAdapter(object):
         self.iterator.reset()
 
     def execute(self):
-        self.log.debug('exec %s: %s' % (self.name, self.conf))
+        self.log.debug('execute %s: %s' % (self.name, self.conf))
         for i in range(len(self.executors)):
             self.index = i + 1
             self.executors[i].parse_conf(self.conf)

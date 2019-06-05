@@ -91,7 +91,7 @@ class EnvConfigHandler(Handler):
         return True
 
     def execute(self):
-        self.log.debug('EnvConfigHandler exec')
+        self.log.debug('EnvConfigHandler execute')
         if not self.__parse_context():
             return False
         self.__back_up = True

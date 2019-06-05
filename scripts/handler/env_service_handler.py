@@ -38,7 +38,7 @@ class EnvServiceHandler(Handler):
         return True
 
     def execute(self):
-        self.log.debug('EnvServiceHandler exec')
+        self.log.debug('EnvServiceHandler execute')
         if not self.__parse_context():
             return False
         keys = self.__config.keys()

@@ -2,7 +2,7 @@
 <!-- user: gbase -->
 <base>
     <env handler="EnvVariableHandler">
-        <conf type="gcluster" var="trans">123;456</conf>
-        <conf type="gbase" var="drs">abc</conf>
+        <conf type="gcluster" var="gcluster_log_level">7</conf>
+        <!--<conf type="gbase" var="drs">abc</conf>-->
     </env>
 </base>

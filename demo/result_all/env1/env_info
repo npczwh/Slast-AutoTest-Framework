@@ -1,2 +1,1 @@
-{'EnvServiceHandler': {'hosts': '192.168.134.131', 'attr': {'type': 'gcluster'}, 'value': 'restart'}}
-{'EnvServiceHandler': {'hosts': '192.168.134.131', 'attr': {'type': 'gbase'}, 'value': 'stop'}}
+{'EnvVariableHandler': {'hosts': None, 'attr': {'var': 'gcluster_log_level', 'type': 'gcluster'}, 'value': '7'}}
