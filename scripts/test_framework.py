@@ -179,6 +179,7 @@ class TestFramework(object):
         src = self.__path + '/result'
         des = self.__path + '/result_all/env' + str(self.__env_index)
         mov_path(src, des)
+        os.mkdir(src)
         env_file = des + '/env_info'
         info = self.__env_step.get_info()
         write_file(env_file, 'w', '')
@@ -198,7 +199,7 @@ class TestFramework(object):
             if not self.__get_execute_ret(executor, 'clear'):
                 return False
             if executor.get_res():
-                print '%s --------- success' % executor.get_name()
+                print '%s --------- pass' % executor.get_name()
             executor.reset()
         return True
 

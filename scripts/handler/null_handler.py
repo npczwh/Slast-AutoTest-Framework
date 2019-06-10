@@ -10,3 +10,6 @@ class NullHandler(Handler):
 
     def execute(self):
         return True
+
+    def clear(self):
+        return True
