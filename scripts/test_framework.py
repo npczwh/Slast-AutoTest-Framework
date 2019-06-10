@@ -160,7 +160,6 @@ class TestFramework(object):
         elif type == 'clear':
             ret = executor.clear()
         if not ret:
-            print '%s --------- fail' % executor.get_name()
             self.__log.error('%s failed' % executor.get_name())
             self.__log.error('%s %s failed: ' % (type, executor.get_name()))
             self.__log.error(executor.get_message())
@@ -200,6 +199,8 @@ class TestFramework(object):
                 return False
             if executor.get_res():
                 print '%s --------- pass' % executor.get_name()
+            else:
+                print '%s --------- fail' % executor.get_name()
             executor.reset()
         return True
 

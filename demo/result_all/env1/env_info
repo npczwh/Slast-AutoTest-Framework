@@ -1,1 +1,2 @@
-{'EnvVariableHandler': {'hosts': None, 'attr': {'var': 'gcluster_log_level', 'type': 'gcluster'}, 'value': '7'}}
+{'NullHandler': {'hosts': None, 'attr': {'var': 'gcluster_log_level', 'type': 'gcluster'}, 'value': '7'}}
+{'NullHandler': {'hosts': None, 'attr': {'var': 'drs', 'type': 'gbase'}, 'value': 'abc'}}
