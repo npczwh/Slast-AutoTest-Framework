@@ -28,13 +28,6 @@ class TestFramework(object):
         self.__level = self.__level_num(level_name)
         self.__mode = None
         self.__log = None
-        formatter = logging.Formatter('%(asctime)s %(filename)s[line:%(lineno)d] %(message)s')
-        # todo: log path, log level
-        handler = logging.FileHandler('tmp.log')
-        handler.setFormatter(formatter)
-        self.__log = logging.getLogger()
-        self.__log.addHandler(handler)
-        self.__log.setLevel(logging.INFO)
         self.__msg = ''
         self.__env_index = 0
 
@@ -55,6 +48,26 @@ class TestFramework(object):
             self.__level = self.__level_num(level)
         self.__mode = int(self.__parser.get('suite', 'test_mode').strip())
         return True
+
+    def __create_log(self):
+        # todo: handle parallel write(use concurrent-log-handler or only get msg in sub process)
+        level = self.__parser.get('log', 'level').strip().lower()
+        formatter = logging.Formatter('%(asctime)s %(filename)s[line:%(lineno)d] %(message)s')
+        name = self.__path + '/log/run.log'
+        handler = logging.FileHandler(name)
+        handler.setFormatter(formatter)
+        self.__log = logging.getLogger()
+        self.__log.addHandler(handler)
+        if level == 'error':
+            self.__log.setLevel(logging.ERROR)
+        elif level == 'warn':
+            self.__log.setLevel(logging.WARNING)
+        elif level == 'info':
+            self.__log.setLevel(logging.INFO)
+        elif level == 'debug':
+            self.__log.setLevel(logging.DEBUG)
+        else:
+            self.__log.setLevel(logging.INFO)
 
     def __add_one_env(self, name):
         conf_path = file_base_dir(self.__config)
@@ -215,11 +228,12 @@ class TestFramework(object):
             return self.NORMAL
 
     def run(self):
-        print 'run with ' + self.__config
-        self.__log.debug('run with ' + self.__config)
+        print 'run suite %s: ' % self.get_name()
         ret = True
         if not self.__parse_conf():
             return False
+        self.__create_log()
+        self.__log.debug('run suite %s: ' % self.get_name())
         if not self.__create_env_steps():
             return False
         if not self.__create_executors():

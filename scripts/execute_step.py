@@ -32,7 +32,6 @@ class ExecuteStep(object):
         self.__compare_handler = None
         self.__execute_handler = None
         self.__execute_config = None
-        # todo: handle parallel write
         self.__path = path
         self.__log = log
         self.__res = False
