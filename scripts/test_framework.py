@@ -30,7 +30,6 @@ class TestFramework(object):
         self.__mode = None
         self.__log = None
         self.__msg = ''
-        self.__env_index = 0
 
     def get_name(self):
         return file_short_name(self.__path)
@@ -185,16 +184,16 @@ class TestFramework(object):
         else:
             return True
 
-    def __prepare_path(self):
+    def __prepare_path(self, env_index):
         re_mkdir(self.__path + '/result')
-        src = self.__path + '/expect_all/env' + str(self.__env_index)
+        src = self.__path + '/expect_all/env' + str(env_index)
         des = self.__path + '/expect'
         if os.path.exists(src):
             copy_path(src, des)
 
-    def __save_result(self):
+    def __save_result(self, env_index):
         src = self.__path + '/result'
-        des = self.__path + '/result_all/env' + str(self.__env_index)
+        des = self.__path + '/result_all/env' + str(env_index)
         mov_path(src, des)
         os.mkdir(src)
         env_file = des + '/env_info'
@@ -240,7 +239,7 @@ class TestFramework(object):
         if not self.__parse_conf():
             return False
         self.__create_log()
-        self.__log.debug('run suite %s: ' % self.get_name())
+        self.__log.info('run suite %s: ' % self.get_name())
         if not self.__create_env_steps():
             return False
         if not self.__create_executors():
@@ -256,21 +255,23 @@ class TestFramework(object):
         if not self.__env_step.init():
             self.__msg += self.__env_step.get_and_clear_message()
             return False
+        env_index = 0
         while self.__env_step.to_next():
-            self.__env_index += 1
+            env_index += 1
             print '*** PREPARE ENVIRONMENT START ***'
-            self.__prepare_path()
+            self.__prepare_path(env_index)
             if not self.__env_step.execute():
                 self.__msg += self.__env_step.get_and_clear_message()
                 if not self.__env_step.clear():
                     self.__msg += self.__env_step.get_and_clear_message()
                 ret = False
                 break
-            print '[ENV %02d] : %s' % (self.__env_index, str(self.__env_step.get_info()))
+            self.__log.info('[ENV %02d] : %s' % (env_index, str(self.__env_step.get_info())))
+            print '[ENV %02d] : %s' % (env_index, str(self.__env_step.get_info()))
             print '*** PREPARE ENVIRONMENT END ***'
             print '*** SUB TEST START ***'
             if self.__execute():
-                self.__save_result()
+                self.__save_result(env_index)
             else:
                 if not self.__env_step.clear():
                     self.__msg += self.__env_step.get_and_clear_message()

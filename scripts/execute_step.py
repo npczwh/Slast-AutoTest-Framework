@@ -34,7 +34,7 @@ class ExecuteStep(object):
         self.__execute_config = None
         self.__path = path
         self.__log = log
-        self.__res = False
+        self.__res = True
 
     def set_extra_attr(self, context):
         if context.get('prepare', None):
@@ -107,6 +107,7 @@ class ExecuteStep(object):
             return True
         else:
             self.__msg += executor.get_message() + '\n'
+            self.__res = False
             return False
 
     def excute(self):
@@ -118,6 +119,7 @@ class ExecuteStep(object):
         else:
             self.__msg = 'execute and execute handler are both empty, fail to create exeutor '
         if not executor:
+            self.__res = False
             return False
 
         if self.__execute_handler and self.__execute_config:
@@ -126,6 +128,7 @@ class ExecuteStep(object):
                 executor.set_context(d)
             else:
                 self.__msg = 'transform execute config (%s) to dict fail ' % self.__execute_config
+                self.__res = False
                 return False
 
         self.__log.info('case %s: execute ' % self.__name)
@@ -133,6 +136,7 @@ class ExecuteStep(object):
             return True
         else:
             self.__msg += executor.get_message() + '\n'
+            self.__res = False
             return False
 
     def clear(self):
@@ -158,18 +162,19 @@ class ExecuteStep(object):
                              % (self.__name, self.DEFAULT_COMPARE_HANDLER))
             executor = self.__create_executor(self.DEFAULT_COMPARE_HANDLER, self.HANDLER_ONLY)
         if not executor:
+            self.__res = False
             return False
         executor.set_context(self.__name)
         self.__log.info('case %s: compare ' % self.__name)
         if executor.execute():
-            self.__res = True
             return True
         else:
             self.__msg += executor.get_message() + '\n'
+            self.__res = False
             return False
 
     def reset(self):
-        self.__res = False
+        self.__res = True
         self.__msg = ''
 
     def get_message(self):

@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='utf-8'?>
 <!-- user: gbase -->
 <base>
-    <env handler="EnvVariableHandler">
-        <conf type="gcluster" var="gcluster_log_level">7</conf>
+    <!--<env handler="EnvVariableHandler">-->
+        <!--<conf type="gcluster" var="gcluster_log_level">7</conf>-->
         <!--<conf type="gbase" var="drs">abc</conf>-->
-    </env>
-    <!--<env handler="NullHandler">-->
-        <!--<conf type="gcluster" var="gcluster_log_level">7; 3</conf>-->
     <!--</env>-->
+    <env handler="NullHandler">
+        <conf type="gcluster" var="gcluster_log_level">7; 3</conf>
+    </env>
 </base>
