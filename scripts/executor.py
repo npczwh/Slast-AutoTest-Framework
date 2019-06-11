@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # _*_ coding: utf-8 _*_
 
-import commands
+import subprocess
 from abc import ABCMeta, abstractmethod
 
 
@@ -24,11 +24,20 @@ class Executor(object):
         self.context = context
 
     def execute_command(self, cmd):
-        (status, self.output) = commands.getstatusoutput(cmd)
-        if status != 0:
+        cmds = "cd %s\n%s" % (self.path, cmd)
+        self.output = []
+        p = subprocess.Popen(cmds, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        while True:
+            line = p.stdout.readline().strip('\n')
+            if not line:
+                break
+            self.output.append(line)
+            print line
+        p.wait()
+        p.stdout.close()
+        if p.returncode:
             self.msg += 'fail to execute command: %s \n' % cmd
-            self.msg += 'status: %s \n' % status
-            self.msg += 'output: %s \n' % self.output
+            self.msg += 'return code: %d \n' % p.returncode
             return False
         return True
 

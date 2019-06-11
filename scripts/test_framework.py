@@ -53,7 +53,10 @@ class TestFramework(object):
         # todo: handle parallel write(use concurrent-log-handler or only get msg in sub process)
         level = self.__parser.get('log', 'level').strip().lower()
         formatter = logging.Formatter('%(asctime)s %(filename)s[line:%(lineno)d] %(message)s')
-        name = self.__path + '/log/run.log'
+        path = self.__path + '/log'
+        if not os.path.exists(path):
+            os.mkdir(path)
+        name = path + '/run.log'
         handler = logging.FileHandler(name)
         handler.setFormatter(formatter)
         self.__log = logging.getLogger()
@@ -182,10 +185,11 @@ class TestFramework(object):
             return True
 
     def __prepare_path(self):
+        re_mkdir(self.__path + '/result')
         src = self.__path + '/expect_all/env' + str(self.__env_index)
         des = self.__path + '/expect'
-        copy_path(src, des)
-        re_mkdir(self.__path + '/result')
+        if os.path.exists(src):
+            copy_path(src, des)
 
     def __save_result(self):
         src = self.__path + '/result'

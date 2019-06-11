@@ -14,5 +14,4 @@ class PerlExecutor(Executor):
         self.msg = 'execute perl: %s \n' % perl
         if not self.execute_command(cmd):
             return False
-        print self.output
         return True

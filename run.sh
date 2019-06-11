@@ -1,2 +1,2 @@
 #!/bin/sh
-python scripts/run.py slast.conf
+python2.7 scripts/run.py slast.conf

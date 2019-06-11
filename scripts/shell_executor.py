@@ -14,5 +14,4 @@ class ShellExecutor(Executor):
         self.msg = 'execute shell: %s \n' % shell
         if not self.execute_command(cmd):
             return False
-        print self.output
         return True

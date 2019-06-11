@@ -14,5 +14,4 @@ class PythonExecutor(Executor):
         self.msg = 'execute python: %s \n' % python
         if not self.execute_command(cmd):
             return False
-        print self.output
         return True
