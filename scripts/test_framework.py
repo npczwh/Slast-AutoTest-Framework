@@ -203,7 +203,9 @@ class TestFramework(object):
             write_file(env_file, 'a', str(line) + '\n')
 
     def __execute(self):
+        index = 0
         for executor in self.__executor_list:
+            index += 1
             if not self.__get_execute_ret(executor, 'prepare'):
                 return False
             if not self.__get_execute_ret(executor, 'excute'):
@@ -215,9 +217,9 @@ class TestFramework(object):
             if not self.__get_execute_ret(executor, 'clear'):
                 return False
             if executor.get_res():
-                print '%s --------- pass' % executor.get_name()
+                print '[case %02d] %s --------------------------- [pass] ' % (index, executor.get_name())
             else:
-                print '%s --------- fail' % executor.get_name()
+                print '[case %02d] %s --------------------------- [fail] ' % (index, executor.get_name())
             executor.reset()
         return True
 
@@ -232,7 +234,7 @@ class TestFramework(object):
             return self.NORMAL
 
     def run(self):
-        print 'run suite %s: ' % self.get_name()
+        print '************ START SUITE %s ************' % self.get_name().upper()
         ret = True
         if not self.__parse_conf():
             return False
@@ -243,7 +245,11 @@ class TestFramework(object):
         if not self.__create_executors():
             return False
         if self.__env_step is None:
-            return self.__execute()
+            ret = self.__execute()
+            if ret:
+                print '************ FINISH SUITE %s SUCCESS ************' % self.get_name().upper()
+                print ''
+            return ret
 
         self.__env_step = self.__env_step.get_root()
         if not self.__env_step.init():
@@ -258,8 +264,8 @@ class TestFramework(object):
                     self.__msg += self.__env_step.get_and_clear_message()
                 ret = False
                 break
-            print 'env: ' + str(self.__env_step.get_info())
-            print 'sub test start'
+            print '[ENV %02d: %s]' % (self.__env_index, str(self.__env_step.get_info()))
+            print '[SUB TEST START]'
             if self.__execute():
                 self.__save_result()
             else:
@@ -268,9 +274,12 @@ class TestFramework(object):
                 ret = False
                 self.__msg += self.__env_step.get_and_clear_message()
                 break
-            print 'sub test end'
+            print '[SUB TEST END]'
             if not self.__env_step.clear():
                 self.__msg += self.__env_step.get_and_clear_message()
                 ret = False
                 break
+        if ret:
+            print '************ FINISH SUITE %s SUCCESS ************' % self.get_name().upper()
+            print ''
         return ret

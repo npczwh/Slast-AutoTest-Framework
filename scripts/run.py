@@ -34,5 +34,8 @@ if __name__ == '__main__':
         manager = TestManager(sys.argv[1])
         if not manager.execute():
             print 'Run tests error: ' + manager.get_message()
+            print 'Please check the error log'
         else:
-            print 'All tests are finished'
+            print '******************************************************'
+            print '*               ALL TESTS ARE FINISHED               *'
+            print '******************************************************'
