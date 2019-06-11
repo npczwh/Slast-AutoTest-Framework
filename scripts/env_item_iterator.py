@@ -45,15 +45,6 @@ class EnvItemIterator(object):
         if self.__child:
             self.__child.reset()
 
-    def get_env(self, env):
-        if self.__index < len(self.__items):
-            env.append(self.__items[self.__index])
-        else:
-            env.append(None)
-        if self.__child:
-            evn = self.__child.get_env(env)
-        return env
-
     def get_root(self):
         if self.__parent:
             return self.__parent.get_root()

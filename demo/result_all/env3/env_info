@@ -1,3 +1,2 @@
-{'EnvConfigHandler': [{'type': 'gbase', 'name': 'trans'}, '456']}
-{'EnvConfigHandler': [{'type': 'gcluster', 'name': 'drs'}, 'abc']}
-{'EnvServiceHandler': [{'type': 'gcluster'}, 'restart']}
+{'NullHandler': {'hosts': '192.168.134.131', 'attr': {'var': 'gcluster_log_level', 'type': 'gcluster'}, 'value': ' c2'}}
+{'NullHandler': {'hosts': None, 'attr': {'var': 'gcluster_log_level', 'type': 'gcluster'}, 'value': 'h1'}}

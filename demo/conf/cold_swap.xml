@@ -1,12 +1,15 @@
 <?xml version='1.0' encoding='utf-8'?>
 <!-- user:name  gbase:gbase -->
 <base hosts="192.168.134.131">
-    <env handler="EnvConfigHandler">
-        <conf type="gbase" section="gbased" option="trans">123;456</conf>
+    <!--<env handler="EnvConfigHandler">-->
+        <!--<conf type="gbase" section="gbased" option="trans">123;456</conf>-->
         <!--<conf type="gcluster" section="gbased" option="drs">abc</conf>-->
-    </env>
-    <env handler="EnvServiceHandler">
-        <conf type="gcluster" >stop</conf>
+    <!--</env>-->
+    <!--<env handler="EnvServiceHandler">-->
+        <!--<conf type="gcluster" >stop</conf>-->
         <!--<conf type="gbase" >stop</conf>-->
+    <!--</env>-->
+    <env handler="NullHandler">
+        <conf type="gcluster" var="gcluster_log_level">c1; c2</conf>
     </env>
 </base>

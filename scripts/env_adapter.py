@@ -110,7 +110,10 @@ class EnvAdapter(object):
         return True
 
     def get_info(self):
-        return self.conf
+        info = []
+        for item in self.conf:
+            info.append(item)
+        return info
 
     def get_message(self):
         return self.msg
