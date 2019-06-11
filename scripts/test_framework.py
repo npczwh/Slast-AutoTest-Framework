@@ -20,6 +20,7 @@ class TestFramework(object):
     TOLERATE = 2
 
     # todo: add param to create expect only
+    # todo: record time cost
     def __init__(self, path, level_name):
         self.__path = path
         self.__config = path + '/conf/' + file_short_name(self.__path) + '.conf'
@@ -257,6 +258,7 @@ class TestFramework(object):
             return False
         while self.__env_step.to_next():
             self.__env_index += 1
+            print '*** PREPARE ENVIRONMENT START ***'
             self.__prepare_path()
             if not self.__env_step.execute():
                 self.__msg += self.__env_step.get_and_clear_message()
@@ -264,8 +266,9 @@ class TestFramework(object):
                     self.__msg += self.__env_step.get_and_clear_message()
                 ret = False
                 break
-            print '[ENV %02d: %s]' % (self.__env_index, str(self.__env_step.get_info()))
-            print '[SUB TEST START]'
+            print '[ENV %02d] : %s' % (self.__env_index, str(self.__env_step.get_info()))
+            print '*** PREPARE ENVIRONMENT END ***'
+            print '*** SUB TEST START ***'
             if self.__execute():
                 self.__save_result()
             else:
@@ -274,7 +277,7 @@ class TestFramework(object):
                 ret = False
                 self.__msg += self.__env_step.get_and_clear_message()
                 break
-            print '[SUB TEST END]'
+            print '*** SUB TEST END ***'
             if not self.__env_step.clear():
                 self.__msg += self.__env_step.get_and_clear_message()
                 ret = False
