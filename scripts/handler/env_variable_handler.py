@@ -5,6 +5,7 @@ from handler import Handler
 from db_conn import *
 
 
+# todo: use db_conn to check set variables result
 class EnvVariableHandler(Handler):
     def __init__(self, path, log):
         super(EnvVariableHandler, self).__init__(path, log)

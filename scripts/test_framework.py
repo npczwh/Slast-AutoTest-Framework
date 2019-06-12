@@ -26,7 +26,10 @@ class TestFramework(object):
         self.__config = path + '/conf/' + file_short_name(self.__path) + '.conf'
         self.__env_step = None
         self.__executor_list = []
-        self.__level = self.__level_num(level_name)
+        if level_name:
+            self.__level = self.__level_num(level_name)
+        else:
+            self.__level = None
         self.__mode = None
         self.__log = None
         self.__msg = ''
@@ -44,7 +47,7 @@ class TestFramework(object):
         self.__parser = ConfigParser.SafeConfigParser()
         self.__parser.read(self.__config)
         level = self.__parser.get('suite', 'test_level').strip()
-        if level:
+        if not self.__level:
             self.__level = self.__level_num(level)
         self.__mode = int(self.__parser.get('suite', 'test_mode').strip())
         return True
