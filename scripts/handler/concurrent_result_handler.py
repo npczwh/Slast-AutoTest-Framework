@@ -25,6 +25,7 @@ class Worker(Process):
         self.__res = res
         self.__res.append(False)
         self.__res.append(self.__msg)
+        self.__output = ''
 
     def run(self):
         cmd = "gccli -h%s -u%s -p%s -c -t -vv -f <%s" % (self.__host, self.__user, self.__pwd, self.__sql)
@@ -32,19 +33,18 @@ class Worker(Process):
             self.__res[1] = self.__msg
             return
         result_file = self.__path + '/result/' + self.__name + '_' + str(self.__id) + '.result'
-        write_file(result_file, 'w', self.output)
+        write_file(result_file, 'w', self.__output)
         self.__res[0] = True
 
     def get_sql(self):
         return self.__sql
 
     def __execute_command(self, cmd):
-        self.output = str(id)
-        (status, self.output) = commands.getstatusoutput(cmd)
+        (status, self.__output) = commands.getstatusoutput(cmd)
         if status != 0:
             self.__msg += 'fail to execute command: %s \n' % cmd
             self.__msg += 'status: %s \n' % status
-            self.__msg += 'output: %s \n' % self.output
+            self.__msg += 'output: %s \n' % self.__output
             return False
         return True
 

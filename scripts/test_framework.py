@@ -189,6 +189,8 @@ class TestFramework(object):
 
     def __prepare_path(self, env_index):
         re_mkdir(self.__path + '/result')
+        if not env_index:
+            return
         src = self.__path + '/expect_all/env' + str(env_index)
         des = self.__path + '/expect'
         if os.path.exists(src):
@@ -248,6 +250,7 @@ class TestFramework(object):
         if not self.__create_executors():
             return False
         if self.__env_step is None:
+            self.__prepare_path(0)
             ret = self.__execute()
             if ret:
                 print '************ FINISH SUITE %s SUCCESS ************' % self.get_name().upper()

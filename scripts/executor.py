@@ -23,18 +23,30 @@ class Executor(object):
     def set_context(self, context):
         self.context = context
 
-    def execute_command(self, cmd):
+    def execute_command(self, cmd, is_sql=False):
         cmds = "cd %s\n%s" % (self.path, cmd)
-        self.output = []
-        p = subprocess.Popen(cmds, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        lines = []
+        p = subprocess.Popen(cmds, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         while True:
-            line = p.stdout.readline().strip('\n')
+            line = p.stdout.readline()
             if not line:
                 break
-            self.output.append(line)
-            print line
+            if not is_sql:
+                print line.strip('\n')
+            lines.append(line)
+        while True:
+            line = p.stderr.readline()
+            if not line:
+                break
+            if not is_sql:
+                print line.strip('\n')
+            lines.append(line)
         p.wait()
         p.stdout.close()
+        p.stderr.close()
+        self.output = ''
+        for l in lines:
+            self.output += l
         if p.returncode:
             self.msg += 'fail to execute command: %s \n' % cmd
             self.msg += 'return code: %d \n' % p.returncode
