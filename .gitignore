@@ -1,5 +1,5 @@
 .idea/
 *.pyc
 *.log
-result/*
-result_all/*
+result/
+result_all/
