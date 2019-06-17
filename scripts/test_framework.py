@@ -21,9 +21,10 @@ class TestFramework(object):
 
     # todo: add param to create expect only
     # todo: record time cost
-    def __init__(self, path, level_name):
-        self.__path = path
-        self.__config = path + '/conf/' + file_short_name(self.__path) + '.conf'
+    def __init__(self, conf, level_name):
+        self.__path = file_base_dir(file_base_dir(conf))
+        self.__name = file_base_name(conf)
+        self.__config = conf
         self.__env_step = None
         self.__executor_list = []
         if level_name:
@@ -35,7 +36,7 @@ class TestFramework(object):
         self.__msg = ''
 
     def get_name(self):
-        return file_short_name(self.__path)
+        return self.__name
 
     def get_message(self):
         return self.__msg

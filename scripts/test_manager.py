@@ -30,8 +30,8 @@ class TestManager(object):
         return True
 
     def __prepare_test_list(self, suite_list):
-        for suite_path in suite_list:
-            suite = TestFramework(suite_path, self.__test_level)
+        for suite_conf in suite_list:
+            suite = TestFramework(suite_conf, self.__test_level)
             self.__suites.append(suite)
         if self.__start_at:
             index = 0
@@ -50,7 +50,7 @@ class TestManager(object):
         if not self.__parse_config():
             return False
         reader = ListReader()
-        if not reader.readpath(self.__list_file):
+        if not reader.readfile(self.__list_file):
             self.__msg = reader.get_message()
             return False
         suite_list = reader.get_list()
