@@ -26,6 +26,7 @@ class ExecuteStep(object):
     def __init__(self, path, log):
         self.__msg = ''
         self.__name = None
+        self.__suite_name = None
         self.__prepare = None
         self.__clear = None
         self.__execute = None
@@ -53,6 +54,8 @@ class ExecuteStep(object):
             self.__execute_handler = context['execute_handler'].strip()
         if context.get('execute_config', None):
             self.__execute_config = context['execute_config'].strip()
+        if context.get('suite_name', None):
+            self.__suite_name = context['suite_name'].strip()
 
     def set_execute_name(self, execute):
         self.__execute = execute
@@ -124,6 +127,8 @@ class ExecuteStep(object):
 
         if self.__execute_handler and self.__execute_config:
             d = str_to_dict(self.__execute_config)
+            d['suite_name'] = self.__suite_name
+            d['case_name'] = self.__name
             if d:
                 executor.set_context(d)
             else:

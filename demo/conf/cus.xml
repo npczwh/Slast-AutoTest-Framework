@@ -14,4 +14,6 @@
     <!--<case execute="c6.sql"/>-->
     <case name="c7" level="normal" execute_handler="ConcurrentHandler"
           execute_config="{'name':'c7', 'concurrent':'1.sql, 2.sql, 3.sql', 'final':'4.sql', 'timeout':5000}"/>
+    <case name="c8" level="normal" execute_handler="SqlHandler"
+          execute_config="{'sql':'1.sql'}"/>
 </list>

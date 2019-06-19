@@ -117,6 +117,7 @@ class TestFramework(object):
                 level = self.__level_num(item['level'])
             if level < self.__level:
                 continue
+            item['suite_name'] = self.__name
             executor = factory.create_step(item, 'xml')
             if executor:
                 self.__executor_list.append(executor)

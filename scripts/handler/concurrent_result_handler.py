@@ -2,51 +2,33 @@
 # _*_ coding: utf-8 _*_
 
 import sys
-import commands
 import os
 from multiprocessing import Process
 from multiprocessing import Manager
 from handler import Handler
+from sql_handler import SqlExecutor
 sys.path.append('..')
 from func import *
 
 
 class Worker(Process):
-    def __init__(self, name, host, user, pwd, path, sql, id, res):
+    def __init__(self, sql, result_file, host, user, pwd, db, res):
         super(Worker, self).__init__()
-        self.__name = name
-        self.__host = host
-        self.__user = user
-        self.__pwd = pwd
-        self.__path = path
+        self.__executor = SqlExecutor(sql, result_file, host, user, pwd, db)
         self.__sql = sql
-        self.__id = id
         self.__msg = ''
         self.__res = res
         self.__res.append(False)
         self.__res.append(self.__msg)
-        self.__output = ''
 
     def run(self):
-        cmd = "gccli -h%s -u%s -p%s -c -t -vv -f <%s" % (self.__host, self.__user, self.__pwd, self.__sql)
-        if not self.__execute_command(cmd):
-            self.__res[1] = self.__msg
-            return
-        result_file = self.__path + '/result/' + self.__name + '_' + str(self.__id) + '.result'
-        write_file(result_file, 'w', self.__output)
-        self.__res[0] = True
+        if self.__executor.execute():
+            self.__res[0] = True
+        else:
+            self.__res[1] = self.__executor.get_message()
 
     def get_sql(self):
         return self.__sql
-
-    def __execute_command(self, cmd):
-        (status, self.__output) = commands.getstatusoutput(cmd)
-        if status != 0:
-            self.__msg += 'fail to execute command: %s \n' % cmd
-            self.__msg += 'status: %s \n' % status
-            self.__msg += 'output: %s \n' % self.__output
-            return False
-        return True
 
 
 class ConcurrentHandler(Handler):
@@ -57,6 +39,7 @@ class ConcurrentHandler(Handler):
         self.__host = '127.0.0.1'
         self.__user = 'gbase'
         self.__pwd = 'gbase20110531'
+        self.__db = 'gclusterdb'
         self.__res_list = []
         self.__workers = []
         self.__name = None
@@ -74,7 +57,8 @@ class ConcurrentHandler(Handler):
             l = m.list()
             self.__res_list.append(l)
             sql_list[i] = self.path + '/case/' + sql_list[i].strip()
-            w = Worker(self.__name, self.__host, self.__user, self.__pwd, self.path, sql_list[i], i, l)
+            result_file = self.path + '/result/' + self.__name + '_' + str(i) + '.result'
+            w = Worker(sql_list[i], result_file, self.__host, self.__user, self.__pwd, self.__db, l)
             self.__workers.append(w)
         return True
 
@@ -106,7 +90,8 @@ class ConcurrentHandler(Handler):
         self.__res_list.append(l)
         sql_name = self.path + '/case/' + self.context.get('final', None)
         i = len(self.__workers)
-        w = Worker(self.__name, self.__host, self.__user, self.__pwd, self.path, sql_name, i, l)
+        result_file = self.path + '/result/' + self.__name + '_' + str(i) + '.result'
+        w = Worker(sql_name, result_file, self.__host, self.__user, self.__pwd, self.__db, l)
         self.__workers.append(w)
         workers = [w]
         if self.__dispatch(workers):
