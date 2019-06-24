@@ -2,7 +2,7 @@
 # _*_ coding: utf-8 _*_
 
 import sys
-import commands
+import subprocess
 from handler import Handler
 sys.path.append('..')
 from func import *
@@ -27,11 +27,27 @@ class SqlExecutor(object):
         return True
 
     def __execute_command(self, cmd):
-        (status, self.__output) = commands.getstatusoutput(cmd)
-        if status != 0:
+        lines = []
+        p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        while True:
+            line = p.stdout.readline()
+            if not line:
+                break
+            lines.append(line)
+        while True:
+            line = p.stderr.readline()
+            if not line:
+                break
+            lines.append(line)
+        p.wait()
+        p.stdout.close()
+        p.stderr.close()
+        self.__output = ''
+        for l in lines:
+            self.__output += l
+        if p.returncode:
             self.__msg += 'fail to execute command: %s \n' % cmd
-            self.__msg += 'status: %s \n' % status
-            self.__msg += 'output: %s \n' % self.__output
+            self.__msg += 'return code: %d \n' % p.returncode
             return False
         return True
 

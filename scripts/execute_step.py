@@ -125,8 +125,11 @@ class ExecuteStep(object):
             self.__res = False
             return False
 
-        if self.__execute_handler and self.__execute_config:
-            d = str_to_dict(self.__execute_config)
+        if self.__execute_handler:
+            if self.__execute_config:
+                d = str_to_dict(self.__execute_config)
+            else:
+                d = {}
             d['suite_name'] = self.__suite_name
             d['case_name'] = self.__name
             if d:
