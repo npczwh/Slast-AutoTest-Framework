@@ -11,7 +11,7 @@ class EnvVariableHandler(Handler):
         super(EnvVariableHandler, self).__init__(path, log)
         self.__back_up = False
         self.__host = '127.0.0.1'
-        self.__use = 'gbase'
+        self.__user = 'gbase'
         self.__pwd = 'gbase20110531'
         self.__config = {}
         self.__bak_config = {}
@@ -37,9 +37,9 @@ class EnvVariableHandler(Handler):
     def __get_conn(self, type):
         connect = None
         if type == 'gcluster':
-            connect = DBConn(self.__host, self.__use, self.__pwd)
+            connect = DBConn(self.__host, self.__user, self.__pwd)
         elif type == 'gbase':
-            connect = DBConn(self.__host, self.__use, self.__pwd, port = 5050)
+            connect = DBConn(self.__host, self.__user, self.__pwd, port = 5050)
         return connect
 
     def __restore_vars(self, conn, type, var):

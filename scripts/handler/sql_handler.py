@@ -4,6 +4,7 @@
 import sys
 import subprocess
 from handler import Handler
+from db_conn import *
 sys.path.append('..')
 from func import *
 
@@ -63,18 +64,46 @@ class SqlHandler(Handler):
         self.__pwd = 'gbase20110531'
         self.__db = 'gclusterdb'
 
+    def __prepare(self, db_name):
+        conn = DBConn(self.__host, self.__user, self.__pwd)
+        try:
+            sql = "drop database if exists %s" % db_name
+            conn.ExecSQL(sql)
+            sql = "create database %s" % db_name
+            conn.ExecSQL(sql)
+        except Exception as e:
+            self.msg = str(e)
+            return False
+        return True
+
+    def __clear(self, db_name):
+        conn = DBConn(self.__host, self.__user, self.__pwd)
+        try:
+            sql = "drop database if exists %s" % db_name
+            conn.ExecSQL(sql)
+        except Exception as e:
+            self.msg = str(e)
+            return False
+        return True
+
     def execute(self):
         if not self.context.get('case_name', None):
             self.msg = 'SqlHandler execute failed: case name not found'
             return True
+        case_name = self.context['case_name'].strip()
         if self.context.get('sql', None):
             sql = self.path + '/case/' + self.context['sql'].strip()
         else:
-            sql = self.path + '/case/' + self.context['case_name'].strip() + '.sql'
+            sql = self.path + '/case/' + case_name + '.sql'
         result_file = self.path + '/result/' + self.context['case_name'].strip() + '.result'
-        executor = SqlExecutor(sql, result_file, self.__host, self.__user, self.__pwd, self.__db)
-        if executor.execute():
+
+        if not self.__prepare(case_name):
+            return False
+        executor = SqlExecutor(sql, result_file, self.__host, self.__user, self.__pwd, case_name)
+        if not executor.execute():
+            self.msg = executor.get_message()
+            return False
+        if self.__clear(case_name):
             return True
         else:
-            self.msg = executor.get_message()
             return False
