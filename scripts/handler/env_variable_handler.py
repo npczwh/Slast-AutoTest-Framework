@@ -2,7 +2,7 @@
 # _*_ coding: utf-8 _*_
 
 from handler import Handler
-from db_conn import *
+from api.db_conn import *
 
 
 # todo: use db_conn to check set variables result
@@ -54,7 +54,7 @@ class EnvVariableHandler(Handler):
             d[var] = value
         else:
             d = {var:value}
-            self.__config[type] = d
+            self.__bak_config[type] = d
         return True
 
     def __set_vars(self, conn, var, value):

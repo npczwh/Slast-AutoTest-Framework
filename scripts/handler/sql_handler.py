@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 # _*_ coding: utf-8 _*_
 
-import sys
 import subprocess
+
 from handler import Handler
-from db_conn import *
+from api.db_conn import *
+
 sys.path.append('..')
 from func import *
 
