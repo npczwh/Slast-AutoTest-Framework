@@ -36,6 +36,7 @@ class EnvExecutor(object):
             return False
 
     def parse_conf(self, conf):
+        self.__context = []
         for item in conf:
             param = item.get(self.__handler_name, None)
             if not param:

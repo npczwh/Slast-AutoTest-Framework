@@ -6,6 +6,6 @@
         <!--<conf type="gbase" var="drs">abc</conf>-->
     <!--</env>-->
     <env handler="NullHandler">
-        <conf type="gcluster" var="gcluster_log_level">7</conf>
+        <conf type="gcluster" var="gcluster_log_level">[7, 3]</conf>
     </env>
 </base>
