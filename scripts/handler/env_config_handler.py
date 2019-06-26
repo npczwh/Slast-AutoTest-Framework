@@ -1,14 +1,10 @@
 #!/usr/bin/env python
 # _*_ coding: utf-8 _*_
 
-import shutil
-import os
-import sys
 import commands
 import ConfigParser
 from handler import Handler
-sys.path.append('..')
-from func import *
+from api.func import *
 
 
 class EnvConfigHandler(Handler):

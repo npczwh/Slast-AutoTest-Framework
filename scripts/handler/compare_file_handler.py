@@ -2,11 +2,8 @@
 # _*_ coding: utf-8 _*_
 
 import difflib
-import os
-import sys
 from handler import Handler
-sys.path.append('..')
-from func import *
+from api.func import *
 
 
 class CompareFileHandler(Handler):

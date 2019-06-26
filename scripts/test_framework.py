@@ -4,10 +4,10 @@
 import logging
 import ConfigParser
 import xml.etree.ElementTree as ET
-from func import *
+from handler.api.func import *
 from env_step import EnvStep
 from env_adapter import EnvAdapter
-from list_reader import ListReader
+from handler.api.list_reader import ListReader
 from execute_step_factory import ExecuteStepFactory
 
 

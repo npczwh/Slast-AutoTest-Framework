@@ -1,14 +1,11 @@
 #!/usr/bin/env python
 # _*_ coding: utf-8 _*_
 
-import sys
-import os
 from multiprocessing import Process
 from multiprocessing import Manager
 from handler import Handler
 from sql_handler import SqlExecutor
-sys.path.append('..')
-from func import *
+from api.func import *
 
 
 class Worker(Process):

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # _*_ coding: utf-8 _*_
 
-from func import *
+from handler.api.func import *
 from sql_executor import SqlExecutor
 from shell_executor import ShellExecutor
 from perl_executor import PerlExecutor

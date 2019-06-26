@@ -2,7 +2,7 @@
 # _*_ coding: utf-8 _*_
 
 from executor import Executor
-from func import *
+from handler.api.func import *
 
 
 class SqlExecutor(Executor):

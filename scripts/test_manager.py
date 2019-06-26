@@ -3,8 +3,8 @@
 
 import ConfigParser
 from test_framework import TestFramework
-from list_reader import ListReader
-from func import *
+from handler.api.list_reader import ListReader
+from handler.api.func import *
 
 
 class TestManager(object):

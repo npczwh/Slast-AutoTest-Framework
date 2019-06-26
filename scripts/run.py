@@ -5,7 +5,7 @@ import sys
 import os
 import re
 from test_manager import TestManager
-from func import *
+from handler.api.func import *
 
 
 def version():

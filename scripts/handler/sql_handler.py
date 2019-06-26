@@ -5,9 +5,7 @@ import subprocess
 
 from handler import Handler
 from api.db_conn import *
-
-sys.path.append('..')
-from func import *
+from api.func import *
 
 
 class SqlExecutor(object):
