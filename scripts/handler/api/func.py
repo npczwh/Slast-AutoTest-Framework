@@ -63,13 +63,13 @@ def line_to_list(line):
     return list
 
 
-def str_to_dict(s):
-    d = None
+def str_to_type(s):
+    ret = None
     try:
-        d = ast.literal_eval(s)
+        ret = ast.literal_eval(s)
     except Exception as e:
         pass
-    return d
+    return ret
 
 
 def re_mkdir(path):

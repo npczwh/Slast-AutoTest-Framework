@@ -4,6 +4,7 @@
 import xml.etree.ElementTree as ET
 from env_item_iterator import EnvItemIterator
 from env_executor import EnvExecutor
+from handler.api.func import *
 
 
 class EnvAdapter(object):
@@ -27,10 +28,12 @@ class EnvAdapter(object):
                 d = {handler_name:d}
                 self.iterator = EnvItemIterator([d], self.iterator)
                 return True
-            values = conf.text.split(';')
-            if not len(values):
-                self.msg = 'values in conf not found in %s' % self.config
+            values = str_to_type(conf.text)
+            if not values:
+                self.msg = 'values in conf not found or invalid in %s' % self.config
                 return False
+            if not list == type(values):
+                values = [values]
             items = []
             for value in values:
                 d = {'hosts': self.hosts, 'attr': attr, 'value': value}

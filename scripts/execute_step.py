@@ -127,7 +127,7 @@ class ExecuteStep(object):
 
         if self.__execute_handler:
             if self.__execute_config:
-                d = str_to_dict(self.__execute_config)
+                d = str_to_type(self.__execute_config)
             else:
                 d = {}
             d['suite_name'] = self.__suite_name
