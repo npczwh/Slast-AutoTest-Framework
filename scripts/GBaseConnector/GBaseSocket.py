@@ -6,8 +6,9 @@ Created on 2013-7-9
 
 import socket
 import struct
-import GBaseError
-from GBaseConstants import MAX_PACKET_LENGTH, GBASE_PACKET_HEADER_LEN
+
+import GBaseConnector.GBaseError
+from GBaseConnector.GBaseConstants import MAX_PACKET_LENGTH, GBASE_PACKET_HEADER_LEN
 
 
 class GBaseSocket(object):
@@ -42,7 +43,7 @@ class GBaseSocket(object):
             for packet in packets:
                 self._gbase_socket.sendall(packet)
         except Exception, err:
-            raise GBaseError.OperationalError(errmsg = str(err))
+            raise GBaseConnector.GBaseError.OperationalError(errmsg = str(err))
     
     def receive_packet(self):
         '''
@@ -58,7 +59,7 @@ class GBaseSocket(object):
             while len(packets) < GBASE_PACKET_HEADER_LEN:
                 buff = self._gbase_socket.recv(1)
                 if buff is None:
-                    raise GBaseError.OperationalError(error = 2013)
+                    raise GBaseConnector.GBaseError.OperationalError(error = 2013)
                 packets += buff
 
             #read the rest data
@@ -66,7 +67,7 @@ class GBaseSocket(object):
             packets += self._get_packet_data(packet_len)
             return packets
         except Exception, err:
-            raise GBaseError.OperationalError(errmsg = str(err))
+            raise GBaseConnector.GBaseError.OperationalError(errmsg = str(err))
     
     def open_tcp(self):
         '''
@@ -87,14 +88,14 @@ class GBaseSocket(object):
                     break   
             (family, socktype, proto, canonname, sockaddr) = addrinfo             
         except socket.gaierror, err:
-            raise GBaseError.InterfaceError(errno=2003,  values=(self._host, err[1]))
+            raise GBaseConnector.GBaseError.InterfaceError(errno=2003, values=(self._host, err[1]))
         
         try:
             self._gbase_socket = socket.socket(family, socktype, proto)
             self._gbase_socket.settimeout(self._timeout)
             self._gbase_socket.connect(sockaddr)
         except socket.gaierror, err:
-            raise GBaseError.InterfaceError(errno=2003, values=(self._host, err[1]))
+            raise GBaseConnector.GBaseError.InterfaceError(errno=2003, values=(self._host, err[1]))
         except socket.error, err:
             try:
                 msg = err.errno
@@ -102,10 +103,10 @@ class GBaseSocket(object):
                     msg = str(err)
             except AttributeError:
                 msg = str(err)
-            raise GBaseError.InterfaceError(
+            raise GBaseConnector.GBaseError.InterfaceError(
                 errno=2003, values=(self._host, msg))
         except StandardError, err:
-            raise GBaseError.InterfaceError(errmsg = '%s' % err)
+            raise GBaseConnector.GBaseError.InterfaceError(errmsg ='%s' % err)
         except:
             raise
     
@@ -169,7 +170,7 @@ class GBaseSocket(object):
                          return the length of gbase packet and the packet's series number. 
         '''
         if len(packets) < GBASE_PACKET_HEADER_LEN:
-            raise GBaseError.OperationalError(error = 2013)
+            raise GBaseConnector.GBaseError.OperationalError(error = 2013)
         
         packet_number = ord(packets[3])
         packet_len = struct.unpack("<I", packets[0:3] + '\x00')[0] + GBASE_PACKET_HEADER_LEN
@@ -187,7 +188,7 @@ class GBaseSocket(object):
         while rest_len > 0:
             buff = self._gbase_socket.recv(rest_len)
             if not buff:
-                raise GBaseError.InterfaceError(errno=2013)
+                raise GBaseConnector.GBaseError.InterfaceError(errno=2013)
             data += buff
             rest_len = rest_len - len(buff)
         return data

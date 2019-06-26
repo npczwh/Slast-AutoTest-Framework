@@ -1,5 +1,7 @@
 import time
-import GBaseLogger
+
+import GBaseConnector.GBaseLogger
+
 global GBASELOGGER
 
 from GBaseConnector.GBaseCursor import GBaseCursor
@@ -60,7 +62,7 @@ class GBaseConnection(object):
         self._unread_result = False
         
         # Initial log system
-        GBaseLogger.InitLog(**kwargs)
+        GBaseConnector.GBaseLogger.InitLog(**kwargs)
         
         if len(kwargs) > 0:
             GBASELOGGER.debug('Open connection.')

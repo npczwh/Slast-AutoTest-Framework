@@ -8,9 +8,10 @@ try:
     from hashlib import sha1
 except ImportError:
     from sha import new as sha1
-from GBaseUtils import *
-from GBaseConstants import FieldFlag
-import GBaseError
+import GBaseConnector.GBaseError
+from GBaseConnector.GBaseConstants import FieldFlag
+from GBaseConnector.GBaseUtils import *
+
 
 class GBaseProtocol(object):
     '''
@@ -31,7 +32,7 @@ class GBaseProtocol(object):
            Description : create an authentication pack
         '''
         if not seed:
-            raise GBaseError.ProgrammingError('Seed missing')
+            raise GBaseConnector.GBaseError.ProgrammingError('Seed missing')
 
         auth = self._make_auth(user, passwd, seed, dbname)
         return int4store(client_flags) +\
@@ -86,7 +87,7 @@ class GBaseProtocol(object):
            Description : parse gbase server's hello message
         '''
         if not self.is_ok(packet):
-            raise GBaseError.InterfaceError(errmsg = "is not ok packet.")
+            raise GBaseConnector.GBaseError.InterfaceError(errmsg ="is not ok packet.")
         res = {}
         try:
             (packet, res['field_count']) = read_int(packet[4:], 1) 
@@ -97,7 +98,7 @@ class GBaseProtocol(object):
             if packet:
                 (packet, res['info_msg']) = read_lc_str(packet)
         except ValueError:
-            raise GBaseError.InterfaceError("Failed parsing OK packet.")
+            raise GBaseConnector.GBaseError.InterfaceError("Failed parsing OK packet.")
         return res
     
     def parse_error_res(self, packet):
@@ -121,7 +122,7 @@ class GBaseProtocol(object):
                 (packet, res['sqlstate']) = read_bytes(packet[1:], 5)
                 res['errmsg'] = packet
         except Exception, err:
-            raise GBaseError.InterfaceError("Failed getting Error information (%r)" % err)        
+            raise GBaseConnector.GBaseError.InterfaceError("Failed getting Error information (%r)" % err)
         return res
     
     def parse_column_res(self, packet):
@@ -181,7 +182,7 @@ class GBaseProtocol(object):
             (packet, res['warning_count']) = read_int(packet, 2)
             (packet, res['server_flag']) = read_int(packet, 2)
         except ValueError:
-            raise GBaseError.InterfaceError("Failed parsing eof packet.")
+            raise GBaseConnector.GBaseError.InterfaceError("Failed parsing eof packet.")
         return res
     
     def read_result_set(self, socket, count = 1):
@@ -266,7 +267,7 @@ class GBaseProtocol(object):
             xored = [ unpack_int(h1) ^ unpack_int(h3) for (h1,h3) in zip(hash1, hash3) ]
             hash4 = struct.pack('20B', *xored)
         except Exception, err:
-            raise GBaseError.InterfaceError('Failed make password; %s' % err)
+            raise GBaseConnector.GBaseError.InterfaceError('Failed make password; %s' % err)
         return hash4
     
     def _make_auth(self, user, passwd, seed, dbname = None):
@@ -284,7 +285,7 @@ class GBaseProtocol(object):
                 user = user.encode('utf8')
             _username = user + '\x00'
         else:
-            raise GBaseError.OperationalError('user cannot be None or empty.')
+            raise GBaseConnector.GBaseError.OperationalError('user cannot be None or empty.')
         
         if passwd is not None and len(passwd) > 0:
             if isinstance(passwd, unicode):

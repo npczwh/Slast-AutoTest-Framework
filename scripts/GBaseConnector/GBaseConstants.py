@@ -1,4 +1,4 @@
-from GBaseError import ProgrammingError
+from GBaseConnector.GBaseError import ProgrammingError
 
 MAX_PACKET_LENGTH = 16777215
 GBASE_PACKET_HEADER_LEN = 4

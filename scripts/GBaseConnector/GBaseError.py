@@ -4,7 +4,7 @@ Created on 2013-7-10
 @author: lyh
 '''
 
-from errmsg import get_client_errmsg
+from GBaseConnector.errmsg import get_client_errmsg
 
 
 _CUSTOM_ERROR_EXCEPTIONS = {}
