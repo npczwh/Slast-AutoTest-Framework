@@ -156,7 +156,7 @@ class TestFramework(object):
             self.__msg = factory.get_message()
             return False
 
-        list_files = line_to_list(self.__parser.get('suite', 'list'))
+        list_files = line_to_list(self.__parser.get('suite', 'list'), ',')
         for f in list_files:
             name = real_file_name(conf_path, f)
             list_type = file_suffix(name)

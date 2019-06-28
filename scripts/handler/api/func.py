@@ -4,8 +4,11 @@
 import os
 import ast
 import shutil
+import subprocess
+import xml.etree.ElementTree as ET
 
 
+# file
 def write_file(filename, mode, buf):
     with open(filename, mode) as f:
         return f.write(buf)
@@ -56,8 +59,9 @@ def real_file_name(base_path, filename):
     return real_filename
 
 
-def line_to_list(line):
-    list = line.split(',')
+# data type
+def line_to_list(line, str):
+    list = line.split(str)
     for i in range(len(list)):
         list[i] = list[i].strip()
     return list
@@ -70,6 +74,13 @@ def str_to_type(s):
     except Exception as e:
         pass
     return ret
+
+
+# system
+def exec_cmd(cmd):
+    p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell = True)
+    [ret_code, out, err] = [p.wait(), p.stdout.read(), p.stderr.read()]
+    return [ret_code, out, err]
 
 
 def re_mkdir(path):
@@ -88,6 +99,20 @@ def copy_path(src, des):
     if os.path.exists(des):
         shutil.rmtree(des)
     shutil.copytree(src, des)
+
+
+# xml
+def add_sub_element(root, tag, attr, text=None):
+    e = ET.SubElement(root, tag, attr)
+    if text is not None:
+        e.text = text
+    e.tail = '\n'
+    return e
+
+
+def write_xml(root, file_name):
+    tree = ET.ElementTree(root)
+    tree.write(file_name, encoding='utf-8', xml_declaration=True)
 
 
 if __name__ == '__main__':
