@@ -29,7 +29,7 @@ class EnvAdapter(object):
                 self.iterator = EnvItemIterator([d], self.iterator)
                 return True
             values = str_to_type(conf.text)
-            if not values:
+            if values is None:
                 self.msg = 'values in conf not found or invalid in %s' % self.config
                 return False
             if not list == type(values):

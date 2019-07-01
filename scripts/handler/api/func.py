@@ -67,6 +67,15 @@ def line_to_list(line, str):
     return list
 
 
+def list_to_line(list, str):
+    line = ''
+    for tmp in list:
+        line += tmp
+        list += str
+    line.rstrip(str)
+    return line
+
+
 def str_to_type(s):
     ret = None
     try:
@@ -108,6 +117,12 @@ def add_sub_element(root, tag, attr, text=None):
         e.text = text
     e.tail = '\n'
     return e
+
+
+def add_one_attr(attr, key, value):
+    if value is None:
+        value = ''
+    attr[key] = value
 
 
 def write_xml(root, file_name):
