@@ -23,6 +23,7 @@ if __name__ == '__main__':
     if len(sys.argv) != 2:
         print 'Invalid param number. Please read the usage below. \n'
         print_usage()
+        exit(2)
     elif sys.argv[1] == '-h' or sys.argv[1] == '--help':
         print_usage()
     elif sys.argv[1] == '-v' or sys.argv[1] == '--version':
@@ -30,11 +31,13 @@ if __name__ == '__main__':
     elif not os.path.isfile(sys.argv[1]):
         print 'Invalid param. Please read the usage below. \n'
         print_usage()
+        exit(2)
     else:
         manager = TestManager(sys.argv[1])
         if not manager.execute():
             print 'Run tests error: ' + manager.get_message()
             print 'Please check the error log'
+            exit(1)
         else:
             print '******************************************************'
             print '*               ALL TESTS ARE FINISHED               *'
