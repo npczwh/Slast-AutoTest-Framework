@@ -60,19 +60,19 @@ def real_file_name(base_path, filename):
 
 
 # data type
-def line_to_list(line, str):
-    list = line.split(str)
+def line_to_list(line, s):
+    list = line.split(s)
     for i in range(len(list)):
         list[i] = list[i].strip()
     return list
 
 
-def list_to_line(list, str):
+def list_to_line(list, s):
     line = ''
     for tmp in list:
-        line += tmp
-        list += str
-    line.rstrip(str)
+        line += str(tmp)
+        line += s
+    line = line.rstrip(s)
     return line
 
 
